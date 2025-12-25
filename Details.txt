@@ -19,7 +19,36 @@ Objective : To design and develop a centralized digital system for storing patie
             To ensure data accuracy, security, and privacy of healthcare information.
             To make the healthcare system more efficient, reliable, and user-friendly.    
 
+
+
 Module : Patient Module
          Doctor Module
          Lab Module
-         Admin Module             
+         Admin Module
+
+
+             
+Patient Module : Patient registration
+                 View doctor and lab details
+                 Book appointments
+                 View lab reports
+
+
+
+Doctor Module : Doctor login
+                View patient details
+                Update diagnosis
+                View appointments
+
+
+
+Lab Module : Lab login
+             Upload test reports
+             View patient test requests
+
+
+
+Admin Module : Manage patient records
+               Manage doctor details
+               Manage lab details
+               System monitoring
