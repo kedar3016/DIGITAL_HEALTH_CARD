@@ -2,7 +2,7 @@
 
 ## ✅ 1. System Design Finalization
 
-Today, the overall system architecture was finalized based on the updated project require
+Today, the overall system architecture was finalized based on the updated project requirements:
 
 ### ✔ Roles & Permissions
 - **Patient**
