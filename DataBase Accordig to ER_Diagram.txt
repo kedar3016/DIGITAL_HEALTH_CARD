@@ -1,0 +1,90 @@
+Tables (Strictly as per ER Diagram)
+NOMINEES
+CREATE TABLE nominees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nomineeName VARCHAR(100) NOT NULL,
+    aadhaarNumber BIGINT NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    bloodRelation VARCHAR(50),
+    contactNo BIGINT NOT NULL,
+    relationshipWithPatient VARCHAR(50),
+    emergencyPIN INT NOT NULL
+);
+
+PATIENTS
+CREATE TABLE patients (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    aadhaarNumber BIGINT NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    dateOfBirth DATE NOT NULL,
+    gender VARCHAR(10),
+    bloodGroup VARCHAR(10),
+    phoneNumber BIGINT UNIQUE,
+    email VARCHAR(100) UNIQUE,
+    address VARCHAR(255),
+    healthCardNumber VARCHAR(50) UNIQUE,
+    registrationDate DATE,
+    nomineeId INT UNIQUE,
+    FOREIGN KEY (nomineeId) REFERENCES nominees(id)
+);
+
+DOCTORS
+CREATE TABLE doctors (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    licenseNumber VARCHAR(50) NOT NULL UNIQUE,
+    specialization VARCHAR(100),
+    phoneNumber BIGINT,
+    email VARCHAR(100),
+    hospitalName VARCHAR(150),
+    country VARCHAR(50)
+);
+
+LAB TECHNICIANS
+CREATE TABLE lab_technicians (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    labName VARCHAR(150) NOT NULL,
+    labType VARCHAR(100),
+    phoneNumber BIGINT,
+    email VARCHAR(100)
+);
+MEDICAL REPORTS (Central Linking Table)
+CREATE TABLE medical_reports (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reportType VARCHAR(100),
+    reportDate DATE,
+    patientId INT NOT NULL,
+    doctorId INT NOT NULL,
+    labTechId INT NOT NULL,
+    FOREIGN KEY (patientId) REFERENCES patients(id),
+    FOREIGN KEY (doctorId) REFERENCES doctors(id),
+    FOREIGN KEY (labTechId) REFERENCES lab_technicians(id)
+);
+
+Sample Data
+INSERT INTO nominees 
+(nomineeName, aadhaarNumber, name, gender, bloodRelation, contactNo, relationshipWithPatient, emergencyPIN)
+VALUES
+('Ravi Kumar', 123456789012, 'Ravi Kumar', 'Male', 'Brother', 9876543210, 'Brother', 1234);
+
+INSERT INTO patients
+(aadhaarNumber, name, dateOfBirth, gender, bloodGroup, phoneNumber, email, address, healthCardNumber, registrationDate, nomineeId)
+VALUES
+(987654321098, 'Amit Sharma', '1995-08-15', 'Male', 'O+', 9998887776, 'amit@gmail.com',
+ 'Delhi, India', 'HC-1001', CURDATE(), 1);
+
+INSERT INTO doctors
+(name, licenseNumber, specialization, phoneNumber, email, hospitalName, country)
+VALUES
+('Dr. Neha Singh', 'DOC12345', 'Cardiology', 8887776665, 'neha@hospital.com', 'Apollo Hospital', 'India');
+
+INSERT INTO lab_technicians
+(labName, labType, phoneNumber, email)
+VALUES
+('SRL Diagnostics', 'Blood Test', 7776665554, 'srl@srl.com');
+
+INSERT INTO medical_reports
+(reportType, reportDate, patientId, doctorId, labTechId)
+VALUES
+('Blood Test Report', CURDATE(), 1, 1, 1);

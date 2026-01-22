@@ -1,0 +1,36 @@
+Digital HealthCard.API
+│
+├── Controllers
+│   ├── PatientsController.cs
+│   ├── NomineesController.cs
+│   ├── DoctorsController.cs
+│   ├── LabTechniciansController.cs
+│   └── MedicalReportsController.cs
+│
+├── Models
+│   ├── Patient.cs
+│   ├── Nominee.cs
+│   ├── Doctor.cs
+│   ├── LabTechnician.cs
+│   └── MedicalReport.cs
+│
+├── DTOs
+│   ├── PatientDto.cs
+│   ├── MedicalReportDto.cs
+│
+├── Repositories
+│   ├── Interfaces
+│   │   ├── IPatientRepository.cs
+│   │   └── IMedicalReportRepository.cs
+│   └── Implementations
+│       ├── PatientRepository.cs
+│       └── MedicalReportRepository.cs
+│
+├── Services
+│   ├── Interfaces
+│   └── Implementations
+│
+├── Data
+│   └── AppDbContext.cs
+│
+└── Program.cs
