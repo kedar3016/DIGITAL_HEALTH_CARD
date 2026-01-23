@@ -8,16 +8,16 @@ namespace DigitalHealthCard.API.Services
         {
             new AadhaarRecord
             {
-                AadhaarNumber = 123456789012,
+                AadhaarNumber = "123456789012",
                 Name = "Rahul Sharma",
                 Gender = "Male",
                 DateOfBirth = new DateTime(1998, 5, 21),
                 Address = "Pune, Maharashtra",
-                PhoneNumber = 9876543210
+                PhoneNumber = "9876543210"
             }
         };
 
-        public AadhaarRecord Verify(long aadhaarNumber)
+        public AadhaarRecord Verify(string aadhaarNumber)
         {
             return AadhaarDataset
                 .FirstOrDefault(a => a.AadhaarNumber == aadhaarNumber);

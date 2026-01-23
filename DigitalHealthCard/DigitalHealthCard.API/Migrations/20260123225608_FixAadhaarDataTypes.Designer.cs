@@ -4,6 +4,7 @@ using DigitalHealthCard.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalHealthCard.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260123225608_FixAadhaarDataTypes")]
+    partial class FixAadhaarDataTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,9 +44,8 @@ namespace DigitalHealthCard.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<long>("PhoneNumber")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -88,9 +90,8 @@ namespace DigitalHealthCard.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<long>("PhoneNumber")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Specialization")
                         .IsRequired()
@@ -127,9 +128,8 @@ namespace DigitalHealthCard.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<long>("PhoneNumber")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime(6)");
@@ -188,17 +188,15 @@ namespace DigitalHealthCard.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AadhaarNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<long>("AadhaarNumber")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("BloodRelation")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ContactNo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<long>("ContactNo")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -233,20 +231,22 @@ namespace DigitalHealthCard.API.Migrations
 
             modelBuilder.Entity("DigitalHealthCard.API.Models.Patient", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int?>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AadhaarNumber")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("BloodGroup")
+                        .IsRequired()
                         .HasMaxLength(5)
                         .HasColumnType("varchar(5)");
 
@@ -257,10 +257,12 @@ namespace DigitalHealthCard.API.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Gender")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10)");
 
                     b.Property<string>("HealthCardNumber")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -269,6 +271,7 @@ namespace DigitalHealthCard.API.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("RegistrationDate")

@@ -9,13 +9,13 @@ namespace DigitalHealthCard.API.Models
 
         public string NomineeName { get; set; }
 
-        public long AadhaarNumber { get; set; }
+        public string AadhaarNumber { get; set; }
 
         public string Gender { get; set; }
 
         public string BloodRelation { get; set; }
 
-        public long ContactNo { get; set; }
+        public string ContactNo { get; set; }
 
         public string RelationshipWithPatient { get; set; }
 

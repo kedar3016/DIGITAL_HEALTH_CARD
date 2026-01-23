@@ -15,14 +15,19 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<AadhaarVerificationService>();
+        builder.Services.AddScoped<PatientService>();
+        builder.Services.AddScoped<AadhaarVerificationService>();
+
+
+
         builder.Services.AddDbContext<AppDbContext>(options =>
         {
             options.UseMySql(
-                builder.Configuration.GetConnectionString("DefaultConnection"),
-                ServerVersion.AutoDetect(
-                    builder.Configuration.GetConnectionString("DefaultConnection")
-                )
-            );
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+        )
+         .EnableDetailedErrors()
+         .EnableSensitiveDataLogging();
         });
 
         var app = builder.Build();
