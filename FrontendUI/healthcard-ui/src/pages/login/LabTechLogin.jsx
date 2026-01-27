@@ -244,6 +244,26 @@ export default function LabTechLogin() {
           </button>
         </div>
 
+        {/* Register Link */}
+        <div style={{ textAlign: "center", marginTop: "16px" }}>
+          <p style={{
+            color: "#718096",
+            fontSize: "14px",
+            margin: "0"
+          }}>
+            Don't have an account? <span
+              onClick={() => navigate('/lab/register')}
+              style={{
+                color: "#4facfe",
+                cursor: "pointer",
+                textDecoration: "underline"
+              }}
+            >
+              Register here
+            </span>
+          </p>
+        </div>
+
         {/* Footer */}
         <div style={{
           textAlign: "center",
