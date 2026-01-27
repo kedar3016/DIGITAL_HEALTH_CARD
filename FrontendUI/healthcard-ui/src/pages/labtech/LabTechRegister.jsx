@@ -2,7 +2,7 @@ import { useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
-export default function LabTechRegiste() {
+export default function LabTechRegister() {
   const [formData, setFormData] = useState({
     labName: "",
     labAddress: "",
