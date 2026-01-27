@@ -1,0 +1,161 @@
+1. Users Table (COMMON LOGIN TABLE)
+CREATE TABLE Users (
+    UserId INT AUTO_INCREMENT PRIMARY KEY,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    PhoneNumber VARCHAR(15),
+    PasswordHash VARCHAR(255) NOT NULL,
+    Role ENUM('PATIENT','DOCTOR','LAB','HOSPITAL_ADMIN','SUPER_ADMIN') NOT NULL,
+    IsActive BOOLEAN DEFAULT TRUE,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+________________________________________
+2️. Patient Table
+CREATE TABLE Patient (
+    PatientId INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT UNIQUE,
+
+    
+    FirstName VARCHAR(50),
+    MiddleName VARCHAR(50),
+    LastName VARCHAR(50),
+
+    Gender ENUM('Male','Female','Other'),
+    DateOfBirth DATE,
+    Age INT,
+
+    BloodGroup VARCHAR(5),
+
+    PhoneNumber VARCHAR(15),
+    AlternatePhone VARCHAR(15),
+
+    Email VARCHAR(100),
+    Address VARCHAR(255),
+
+    HealthId VARCHAR(20) UNIQUE,
+
+    NomineeName VARCHAR(100),
+    NomineeRelation VARCHAR(50),
+
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+);
+
+________________________________________
+3️. Doctor Table
+CREATE TABLE Doctor (
+    DoctorId INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT UNIQUE,
+
+    FirstName VARCHAR(50),
+    MiddleName VARCHAR(50),
+    LastName VARCHAR(50),
+
+    LicenseId VARCHAR(50) UNIQUE NOT NULL,   -- Medical Council License Number
+
+    Specialization VARCHAR(100),
+    Qualification VARCHAR(100),
+    Experience INT,
+
+    PhoneNumber VARCHAR(15),
+    Email VARCHAR(100),
+
+    HospitalName VARCHAR(100),
+    AvailabilityStatus ENUM('Available','Not Available'),
+    ConsultationFee DECIMAL(10,2),
+
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+);
+________________________________________
+4️. Lab Table
+CREATE TABLE Lab (
+    LabId INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT UNIQUE,
+
+    LabName VARCHAR(100),
+    LabType VARCHAR(50),
+
+    Email VARCHAR(100),
+    PhoneNumber VARCHAR(15),
+
+    Address VARCHAR(255),
+
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+);
+________________________________________
+5️. Hospital Table
+CREATE TABLE Hospital (
+    HospitalId INT AUTO_INCREMENT PRIMARY KEY,
+
+    HospitalName VARCHAR(100),
+    Address VARCHAR(255),
+
+    Email VARCHAR(100),
+    PhoneNumber VARCHAR(15),
+
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+________________________________________
+6️. Hospital Admin Table
+CREATE TABLE HospitalAdmin (
+    AdminId INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT UNIQUE,
+
+    FirstName VARCHAR(50),
+    MiddleName VARCHAR(50),
+    LastName VARCHAR(50),
+
+    Role ENUM('SuperAdmin','ITAdmin','ComplianceOfficer','DepartmentHead'),
+    Department VARCHAR(50),
+
+    HospitalId INT,
+
+    HireDate DATE,
+    Experience INT,
+
+    Email VARCHAR(100),
+    PhoneNumber VARCHAR(15),
+
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (UserId) REFERENCES Users(UserId),
+    FOREIGN KEY (HospitalId) REFERENCES Hospital(HospitalId)
+);
+________________________________________
+7️. Health Record Table (CORE OF DIGITAL HEALTH CARD)
+CREATE TABLE HealthRecord (
+    RecordId INT AUTO_INCREMENT PRIMARY KEY,
+
+    PatientId INT,
+    DoctorId INT,
+    LabId INT,
+
+    RecordType ENUM('Prescription','Diagnosis','LabReport','Vaccination'),
+    Description TEXT,
+    FilePath VARCHAR(255),
+
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (PatientId) REFERENCES Patient(PatientId),
+    FOREIGN KEY (DoctorId) REFERENCES Doctor(DoctorId),
+    FOREIGN KEY (LabId) REFERENCES Lab(LabId)
+);
+________________________________________
+8️. Consent Table (PATIENT DATA SHARING CONTROL)
+CREATE TABLE Consent (			
+    ConsentId INT AUTO_INCREMENT PRIMARY KEY,
+
+    PatientId INT,
+    GrantedToRole ENUM('DOCTOR','LAB'),
+    GrantedToId INT,
+
+    IsActive BOOLEAN DEFAULT TRUE,
+    GrantedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (PatientId) REFERENCES Patient(PatientId)
+);
+

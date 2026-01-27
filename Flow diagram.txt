@@ -1,0 +1,33 @@
+-->For Patient 
+
+Patient Registration
+      |
+Enter Aadhaar Number
+      |
+Call Aadhaar API → Fetch Name/DOB/Gender
+      |
+Aadhaar OTP Verification
+      |
+Account Created → Patient Logs In → View Reports
+
+
+--->Doctor
+
+Doctor Registration
+      |
+Pending
+      |
+Admin Approves
+      |
+Doctor Logs In → View Patient Reports
+
+
+----->Lab
+
+Lab Technician Login → Upload Report (No access to old reports)
+
+
+
+--->Nominee
+Nominee → Login with PIN → View Limited Data
+

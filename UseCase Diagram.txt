@@ -1,0 +1,20 @@
+
+Patient ------------Register / Login               
+Patient ------------View Doctor Details             
+Patient ------------Book Appointment                
+Patient ------------View Lab Details                
+Patient ------------View Reports                    
+                                                  
+Doctor -------------Login                           
+Doctor -------------View Patient Details            
+Doctor -------------Update Diagnosis                
+Doctor -------------View Appointments               
+                                          
+Lab ----------------Login                           
+Lab ----------------Upload Test Reports             
+Lab ----------------View Patient Test Requests      
+                                                
+Admin --------------Manage Patients                 
+Admin --------------Manage Doctors                  
+Admin --------------Manage Labs    
+                    

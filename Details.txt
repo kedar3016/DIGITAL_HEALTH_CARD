@@ -1,0 +1,54 @@
+Problem Statment : Managing patient health records manually is time-consuming and inefficient.
+A digital health card system is required to store and access patient, doctor, and lab information securely and easily.  
+
+
+
+Aim : The aim of this project is to design and develop a Digital Health Card System that securely stores and manages
+patient health information, doctor details, and laboratory records in a centralized digital platform. 
+The system aims to provide easy access to medical data, improve communication between patients, doctors, and laboratories, 
+reduce paperwork, and enhance the efficiency and quality of health.
+
+
+
+Objective : To design and develop a centralized digital system for storing patient health records securely.
+            To maintain doctor information including specialization, qualification, and experience.
+	    To manage laboratory details and laboratory test records efficiently.
+            To provide easy and quick access to patient medical information for authorized users.
+            To reduce manual paperwork and eliminate data redundancy in healthcare records.
+            To improve coordination and communication between patients, doctors, and laboratories.
+            To ensure data accuracy, security, and privacy of healthcare information.
+            To make the healthcare system more efficient, reliable, and user-friendly.    
+
+
+
+Module : Patient Module
+         Doctor Module
+         Lab Module
+         Admin Module
+
+
+             
+Patient Module : Patient registration
+                 View doctor and lab details
+                 Book appointments
+                 View lab reports
+
+
+
+Doctor Module : Doctor login
+                View patient details
+                Update diagnosis
+                View appointments
+
+
+
+Lab Module : Lab login
+             Upload test reports
+             View patient test requests
+
+
+
+Admin Module : Manage patient records
+               Manage doctor details
+               Manage lab details
+               System monitoring

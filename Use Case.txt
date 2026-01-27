@@ -1,0 +1,21 @@
+                                 +------------------+
+                                 |      Admin       |
+                                 +------------------+
+                                          |
+                                          v
+                                 [Approve Doctor]
+
+PATIENT -----------------------------------------------+
+  | Register via Aadhaar                               |
+  | Aadhaar OTP Verification                           |
+  | Auto-fill Details                                  |
+  | View Reports                                        |
+  | Add Nominee                                         |
+  | Request Emergency Access                            |
+  +----------------------------------------------------+
+
+NOMINEE --> [Emergency Login] --> [View Limited Report]
+
+DOCTOR --> [Register] --> [Admin Approval] --> [View Reports]
+
+LAB TECHNICIAN --> [Login] --> [Upload New Report Only]

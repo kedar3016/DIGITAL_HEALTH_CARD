@@ -1,0 +1,165 @@
+
+db.users.insertOne({
+  _id: ObjectId(),
+  email: "user@email.com",
+  phoneNumber: "9876543210",
+  passwordHash: "hashed_password",
+  role: "PATIENT", // PATIENT, DOCTOR, LAB, HOSPITAL_ADMIN, SUPER_ADMIN
+  isActive: true,
+  createdAt: new Date()
+});
+
+
+
+
+db.patients.insertOne({
+  _id: ObjectId(),
+  userId: ObjectId("USER_OBJECT_ID"),
+
+  name: {
+    firstName: "Poonam",
+    middleName: "",
+    lastName: "Agrawal"
+  },
+
+  gender: "Female",
+  dateOfBirth: ISODate("2002-05-10"),
+  age: 22,
+
+  bloodGroup: "O+",
+
+  phoneNumber: "9876543210",
+  alternatePhone: "9123456789",
+  email: "patient@email.com",
+  address: "Pune, Maharashtra",
+
+  healthId: "HEALTH12345",
+
+  nominee: {
+    name: "Father",
+    relation: "Parent"
+  },
+
+  createdAt: new Date()
+});
+
+
+
+
+
+
+
+db.doctors.insertOne({
+  _id: ObjectId(),
+  userId: ObjectId("USER_OBJECT_ID"),
+
+  name: {
+    firstName: "Dr. Amit",
+    middleName: "",
+    lastName: "Sharma"
+  },
+
+  licenseId: "MCI-123456",
+  specialization: "Cardiology",
+  qualification: "MBBS, MD",
+  experience: 10,
+
+  phoneNumber: "9999999999",
+  email: "doctor@email.com",
+
+  hospitalName: "City Hospital",
+  availabilityStatus: "Available",
+  consultationFee: 500.00,
+
+  createdAt: new Date()
+});
+
+
+
+db.labs.insertOne({
+  _id: ObjectId(),
+  userId: ObjectId("USER_OBJECT_ID"),
+
+  labName: "HealthPlus Lab",
+  labType: "Pathology",
+
+  email: "lab@email.com",
+  phoneNumber: "8888888888",
+
+  address: "Mumbai, Maharashtra",
+
+  createdAt: new Date()
+});
+
+
+
+
+db.hospitals.insertOne({
+  _id: ObjectId(),
+  hospitalName: "City Hospital",
+  address: "Mumbai, Maharashtra",
+
+  email: "hospital@email.com",
+  phoneNumber: "7777777777",
+
+  createdAt: new Date()
+});
+
+
+
+
+db.hospitalAdmins.insertOne({
+  _id: ObjectId(),
+  userId: ObjectId("USER_OBJECT_ID"),
+
+  name: {
+    firstName: "Raj",
+    middleName: "",
+    lastName: "Verma"
+  },
+
+  role: "ITAdmin", // SuperAdmin, ITAdmin, ComplianceOfficer, DepartmentHead
+  department: "IT",
+
+  hospitalId: ObjectId("HOSPITAL_OBJECT_ID"),
+
+  hireDate: ISODate("2020-01-10"),
+  experience: 5,
+
+  email: "admin@email.com",
+  phoneNumber: "6666666666",
+
+  createdAt: new Date()
+});
+
+
+
+
+db.healthRecords.insertOne({
+  _id: ObjectId(),
+
+  patientId: ObjectId("PATIENT_OBJECT_ID"),
+  doctorId: ObjectId("DOCTOR_OBJECT_ID"),
+  labId: ObjectId("LAB_OBJECT_ID"),
+
+  recordType: "LabReport", // Prescription, Diagnosis, LabReport, Vaccination
+  description: "Blood test results",
+  filePath: "/reports/bloodtest.pdf",
+
+  createdAt: new Date()
+});
+
+
+
+
+
+db.consents.insertOne({
+  _id: ObjectId(),
+
+  patientId: ObjectId("PATIENT_OBJECT_ID"),
+  grantedToRole: "DOCTOR", // DOCTOR, LAB
+  grantedToId: ObjectId("DOCTOR_OBJECT_ID"),
+
+  isActive: true,
+  grantedAt: new Date()
+});
