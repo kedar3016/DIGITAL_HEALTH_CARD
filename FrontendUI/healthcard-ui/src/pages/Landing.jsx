@@ -5,7 +5,8 @@ import HowItWorks from "../components/HowItWorks";
 import Testimonials from "../components/Testimonials";
 import Roles from "../components/Roles";
 import Footer from "../components/Footer";
-import ChatBot from "../components/ChatBot";
+import ChatBot from "../components/ChatWidget";
+import ChatWidget from "../components/ChatWidget";
 
 export default function Landing() {
   return (
@@ -21,7 +22,7 @@ export default function Landing() {
       <Roles />
       <Footer />
       {/* Gemini AI Studio API key is now set */}
-      <ChatBot apiKey={"AIzaSyCxeNpjmfs5tQtARtSz9JGKKj2KX4PEtFE"} />
+      <ChatWidget />
     </div>
   );
 }
