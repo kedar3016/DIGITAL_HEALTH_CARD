@@ -303,7 +303,7 @@ export default function PatientDashboard() {
                 textTransform: "uppercase",
                 letterSpacing: "0.5px"
               }}>
-                Age
+                age
               </h3>
               <p style={{
                 color: "#2d3748",

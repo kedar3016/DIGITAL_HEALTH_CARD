@@ -2,7 +2,7 @@ import { useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
-export default function LabTechLogin() {
+export default function LabTechLogi() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
