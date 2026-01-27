@@ -253,28 +253,10 @@ export default function LabTechLogin() {
           <p style={{
             color: "#718096",
             fontSize: "14px",
-            margin: "0 0 12px 0"
+            margin: "0"
           }}>
-            Don't have an account?
+            Medical laboratory management
           </p>
-          <a
-            href="/lab/register"
-            style={{
-              color: "#4facfe",
-              textDecoration: "none",
-              fontWeight: "600",
-              fontSize: "14px",
-              transition: "color 0.2s"
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.color = "#00f2fe";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = "#4facfe";
-            }}
-          >
-            Register here
-          </a>
         </div>
 
         {/* Add CSS animation for loading spinner */}
