@@ -72,19 +72,18 @@ export default function PatientRegister() {
       });
 
       // Fetch patient data after OTP verification
-      const patientData = response.data.patientData || {};
+    const patientData = response.data || {};
 
-      // Pre-populate form with fetched data
-      setFormData({
-        name: patientData.name || "",
-        email: patientData.email || "",
-        password: "",
-        confirmPassword: "",
-        phone: patientData.phone || "",
-        dateOfBirth: patientData.dateOfBirth || "",
-        gender: patientData.gender || "",
-        address: patientData.address || ""
-      });
+setFormData({
+  name: patientData.name || "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  phone: patientData.mobile?.toString() || "",
+  dateOfBirth: patientData.dateOfBirth?.split("T")[0] || "",
+  gender: patientData.gender || "",
+  address: patientData.address || ""
+});
 
       setStep(2);
       setError("");
