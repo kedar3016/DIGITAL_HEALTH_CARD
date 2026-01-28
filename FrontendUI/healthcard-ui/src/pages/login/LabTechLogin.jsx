@@ -253,10 +253,24 @@ export default function LabTechLogin() {
           <p style={{
             color: "#718096",
             fontSize: "14px",
-            margin: "0"
+            margin: "0 0 10px 0"
           }}>
-            Medical laboratory management
+            Don't have an account?
           </p>
+          <button
+            onClick={() => navigate("/register/lab")}
+            style={{
+              background: "transparent",
+              color: "#4facfe",
+              border: "none",
+              fontSize: "14px",
+              fontWeight: "600",
+              cursor: "pointer",
+              textDecoration: "underline"
+            }}
+          >
+            Register here
+          </button>
         </div>
 
         {/* Add CSS animation for loading spinner */}

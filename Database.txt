@@ -145,6 +145,8 @@ CREATE TABLE HealthRecord (
     FOREIGN KEY (LabId) REFERENCES Lab(LabId)
 );
 ________________________________________
+
+
 8️. Consent Table (PATIENT DATA SHARING CONTROL)
 CREATE TABLE Consent (			
     ConsentId INT AUTO_INCREMENT PRIMARY KEY,
@@ -157,5 +159,4 @@ CREATE TABLE Consent (
     GrantedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (PatientId) REFERENCES Patient(PatientId)
-);
-
+);s
