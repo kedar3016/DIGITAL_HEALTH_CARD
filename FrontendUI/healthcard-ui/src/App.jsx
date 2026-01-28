@@ -18,6 +18,7 @@ import DoctorRegister from "./pages/doctor/DoctorRegister";
 
 // Lab Technician
 import LabTechLogin from "./pages/login/LabTechLogin";
+import LabTechRegister from "./pages/labtech/LabTechRegister";
 import LabDashboard from "./pages/labtech/LabDashboard";
 import PatientSearch from "./pages/labtech/PatientSearch";
 import UploadReport from "./pages/labtech/UploadReport";
@@ -75,6 +76,7 @@ function App() {
 
         {/* 🧪 Lab Technician */}
         <Route path="/login/lab" element={<LabTechLogin />} />
+        <Route path="/register/lab" element={<LabTechRegister />} />
         <Route
           path="/lab/dashboard"
           element={
