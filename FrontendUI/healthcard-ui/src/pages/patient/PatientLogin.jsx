@@ -18,7 +18,7 @@ export default function PatientLogin() {
     setError("");
 
     try {
-      const response = await api.post("/api/aadhaar/send-otp", { aadhaarNumber: aadhaar });
+      const response = await api.post("/api/auth/send-login-otp", { aadhaarNumber: aadhaar });
       console.log(response.data);
       // Navigate to OTP verification page
       navigate("/patient/verify-otp", { state: { aadhaar } });

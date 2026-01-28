@@ -4,6 +4,7 @@ using HealthCardAPI.Model;
 using HealthCardAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HealthCardAPI.Controllers
 {
@@ -26,7 +27,7 @@ namespace HealthCardAPI.Controllers
         public async Task<IActionResult> SendLoginOtp(SendLoginOtpDto dto)
         {
             var patient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.PhoneNumber == dto.PhoneNumber);
+                .FirstOrDefaultAsync(p => p.AadhaarNumber == dto.AadhaarNumber);
 
             if (patient == null)
                 return BadRequest("Mobile number not registered");
@@ -35,7 +36,7 @@ namespace HealthCardAPI.Controllers
 
             _context.OtpVerifications.Add(new OtpVerification
             {
-                PhoneNumber = dto.PhoneNumber,
+                AadhaarNumber = dto.AadhaarNumber,
                 Otp = otp,
                 Expiry = DateTime.UtcNow.AddMinutes(5)
             });
@@ -51,7 +52,7 @@ namespace HealthCardAPI.Controllers
         {
             var record = await _context.OtpVerifications
                 .FirstOrDefaultAsync(o =>
-                    o.PhoneNumber == dto.PhoneNumber &&
+                    o.AadhaarNumber == dto.AadhaarNumber &&
                     o.Otp == dto.Otp &&
                     o.Expiry > DateTime.UtcNow);
 
@@ -62,7 +63,7 @@ namespace HealthCardAPI.Controllers
             await _context.SaveChangesAsync();
 
             var patient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.PhoneNumber == dto.PhoneNumber);
+                .FirstOrDefaultAsync(p => p.AadhaarNumber == dto.AadhaarNumber);
 
             return Ok(new
             {
@@ -147,7 +148,6 @@ public async Task<IActionResult> DoctorLogin(DoctorLoginDto dto)
                 tech.LabName
             });
         }
-
 
     }
 

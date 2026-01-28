@@ -87,7 +87,7 @@ const ChatWidget = () => {
       let fullText = '';
 
       for await (const chunk of streamResult) {
-        const chunkText = chunk?.text || '';
+        const chunkText = typeof chunk.text === 'function' ? chunk.text() : (chunk.text || '');
         fullText += chunkText;
 
         setMessages((prev) =>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import { User, Phone, Calendar, MapPin, Mail, Droplet, Users, Heart, ArrowLeft, Loader2, Key } from "lucide-react";
 
 export default function PatientRegister() {
   const [step, setStep] = useState(1); // 1: Aadhaar & OTP, 2: Registration Form
@@ -10,21 +11,21 @@ export default function PatientRegister() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
-    confirmPassword: "",
     phone: "",
     dateOfBirth: "",
     gender: "",
-    address: ""
+    address: "",
+    bloodGroup: "",
+    nomineeName: "",
+    nomineeRelation: "",
+    nomineePhone: ""
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const formatAadhaar = (value) => {
-    // Remove non-digits
     const digits = value.replace(/\D/g, '');
-    // Limit to 12 digits
     return digits.slice(0, 12);
   };
 
@@ -44,7 +45,7 @@ export default function PatientRegister() {
 
     try {
       await api.post("/api/aadhaar/send-otp", {
-        aadhaarNumber: aadhaarNumber
+        aadhaarNumber: Number(aadhaarNumber)
       });
       setOtpSent(true);
       setError("");
@@ -67,23 +68,20 @@ export default function PatientRegister() {
 
     try {
       const response = await api.post("/api/aadhaar/verify-otp", {
-        aadhaarNumber: aadhaarNumber,
+        aadhaarNumber: Number(aadhaarNumber),
         otp: otp
       });
 
-      // Fetch patient data after OTP verification
-    const patientData = response.data || {};
+      const patientData = response.data || {};
 
-setFormData({
-  name: patientData.name || "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  phone: patientData.mobile?.toString() || "",
-  dateOfBirth: patientData.dateOfBirth?.split("T")[0] || "",
-  gender: patientData.gender || "",
-  address: patientData.address || ""
-});
+      setFormData(prev => ({
+        ...prev,
+        name: patientData.name || "",
+        phone: patientData.mobile ? patientData.mobile.toString() : "",
+        dateOfBirth: patientData.dateOfBirth?.split("T")[0] || "",
+        gender: patientData.gender || "",
+        address: patientData.address || ""
+      }));
 
       setStep(2);
       setError("");
@@ -104,18 +102,8 @@ setFormData({
 
   const register = async () => {
     // Validation
-    if (!formData.email || !formData.password) {
+    if (!formData.email || !formData.bloodGroup || !formData.nomineeName || !formData.nomineeRelation || !formData.nomineePhone) {
       setError("Please fill in all required fields");
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
       return;
     }
 
@@ -123,23 +111,30 @@ setFormData({
     setError("");
 
     try {
-      await api.post("/api/auth/patient/register", {
+      await api.post("/api/Patients/register", {
+        aadhaarNumber: Number(aadhaarNumber),
         name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        aadhaarNumber: aadhaarNumber,
-        phone: formData.phone,
         dateOfBirth: formData.dateOfBirth,
         gender: formData.gender,
-        address: formData.address
+        address: formData.address,
+        email: formData.email,
+        bloodGroup: formData.bloodGroup,
+        phoneNumber: Number(formData.phone),
+        nomineeName: formData.nomineeName,
+        nomineeRelation: formData.nomineeRelation,
+        nomineePhone: Number(formData.nomineePhone)
       });
 
-      // Show success message and redirect to login
-      alert("Registration successful! Please login with your Aadhaar number.");
+      alert("Registration successful! You can now access your account.");
       navigate("/login/patient");
     } catch (err) {
       console.error("Registration failed", err);
       setError(err.response?.data?.message || "Registration failed. Please try again.");
+      if (err.response?.data?.errors) {
+        // rough formatting for validation errors
+        const msgs = Object.values(err.response.data.errors).flat().join(", ");
+        if (msgs) setError(msgs);
+      }
     } finally {
       setLoading(false);
     }
@@ -152,806 +147,281 @@ setFormData({
     setError("");
   };
 
+  const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
   if (step === 1) {
     return (
-      <div style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "20px",
-        fontFamily: "'Inter', system-ui, sans-serif"
-      }}>
-        <div style={{
-          background: "white",
-          borderRadius: "16px",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
-          padding: "40px",
-          width: "100%",
-          maxWidth: "420px",
-          position: "relative",
-          overflow: "hidden"
-        }}>
-          {/* Patient Icon */}
-          <div style={{
-            position: "absolute",
-            top: "-20px",
-            right: "-20px",
-            width: "80px",
-            height: "80px",
-            background: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white",
-            fontSize: "24px",
-            fontWeight: "bold"
-          }}>
-            👤
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-pink-50 flex items-center justify-center p-4 font-sans">
+        <div className="bg-white rounded-2xl shadow-xl w-full max-w-md relative overflow-hidden p-8 border border-white/50 backdrop-blur-sm">
+
+          <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-teal-200 to-pink-200 rounded-full flex items-center justify-center text-white text-3xl shadow-lg">
+            <User size={32} />
           </div>
 
-          {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: "30px" }}>
-            <h1 style={{
-              color: "#2d3748",
-              fontSize: "28px",
-              fontWeight: "700",
-              margin: "0 0 8px 0"
-            }}>
-              Patient Registration
-            </h1>
-            <p style={{
-              color: "#718096",
-              fontSize: "16px",
-              margin: "0"
-            }}>
-              Step 1: Verify your identity
-            </p>
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Patient Registration</h1>
+            <p className="text-gray-500">Step 1: Verify Identity</p>
           </div>
 
-          {/* Error Message */}
           {error && (
-            <div style={{
-              backgroundColor: "#fed7d7",
-              color: "#c53030",
-              padding: "12px 16px",
-              borderRadius: "8px",
-              marginBottom: "20px",
-              border: "1px solid #feb2b2",
-              fontSize: "14px"
-            }}>
-              ⚠️ {error}
+            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-6 text-sm border border-red-100 flex items-center gap-2">
+              <span className="font-bold">!</span> {error}
             </div>
           )}
 
-          {/* Aadhaar Input */}
-          <div style={{ marginBottom: "24px" }}>
-            <label style={{
-              display: "block",
-              color: "#4a5568",
-              fontSize: "14px",
-              fontWeight: "600",
-              marginBottom: "6px"
-            }}>
-              Aadhaar Number *
-            </label>
-            <input
-              type="text"
-              placeholder="Enter 12-digit Aadhaar number"
-              value={aadhaarNumber}
-              onChange={handleAadhaarChange}
-              disabled={loading || otpSent}
-              maxLength="12"
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                border: "2px solid #e2e8f0",
-                borderRadius: "8px",
-                fontSize: "16px",
-                transition: "border-color 0.2s, box-shadow 0.2s",
-                outline: "none",
-                boxSizing: "border-box",
-                fontFamily: "monospace"
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = "#a8edea";
-                e.target.style.boxShadow = "0 0 0 3px rgba(168, 237, 234, 0.1)";
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = "#e2e8f0";
-                e.target.style.boxShadow = "none";
-              }}
-            />
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Aadhaar Number</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Enter 12-digit Aadhaar number"
+                  value={aadhaarNumber}
+                  onChange={handleAadhaarChange}
+                  disabled={loading || otpSent}
+                  maxLength={12}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-200 focus:border-teal-400 outline-none transition-all pl-10 tracking-widest font-mono"
+                />
+                <Key className="absolute left-3 top-3.5 text-gray-400" size={18} />
+              </div>
+            </div>
+
+            {otpSent && (
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">One Time Password</label>
+                <input
+                  type="text"
+                  placeholder="Enter 6-digit OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  disabled={loading}
+                  maxLength={6}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-200 focus:border-teal-400 outline-none transition-all text-center tracking-[0.5em] font-mono text-lg"
+                />
+                <p className="text-xs text-gray-400 mt-2 text-center">OTP sent to registered mobile number</p>
+              </div>
+            )}
+
+            {!otpSent ? (
+              <button
+                onClick={sendOtp}
+                disabled={loading}
+                className="w-full py-3.5 bg-gradient-to-r from-teal-400 to-teal-500 text-white rounded-xl font-semibold shadow-lg shadow-teal-200 hover:shadow-teal-300 transform hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {loading ? <Loader2 className="animate-spin" size={20} /> : "Send OTP"}
+              </button>
+            ) : (
+              <div className="flex gap-3">
+                <button
+                  onClick={goBackToStep1}
+                  disabled={loading}
+                  className="flex-1 py-3.5 bg-gray-100 text-gray-600 rounded-xl font-semibold hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+                >
+                  <ArrowLeft size={18} /> Back
+                </button>
+                <button
+                  onClick={verifyOtp}
+                  disabled={loading}
+                  className="flex-1 py-3.5 bg-gradient-to-r from-teal-400 to-teal-500 text-white rounded-xl font-semibold shadow-lg shadow-teal-200 hover:shadow-teal-300 transform hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {loading ? <Loader2 className="animate-spin" size={20} /> : "Verify & Continue"}
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* OTP Input - Show only after OTP is sent */}
-          {otpSent && (
-            <div style={{ marginBottom: "24px" }}>
-              <label style={{
-                display: "block",
-                color: "#4a5568",
-                fontSize: "14px",
-                fontWeight: "600",
-                marginBottom: "6px"
-              }}>
-                Enter OTP *
-              </label>
-              <input
-                type="text"
-                placeholder="Enter 6-digit OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                disabled={loading}
-                maxLength="6"
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  border: "2px solid #e2e8f0",
-                  borderRadius: "8px",
-                  fontSize: "16px",
-                  transition: "border-color 0.2s, box-shadow 0.2s",
-                  outline: "none",
-                  boxSizing: "border-box",
-                  fontFamily: "monospace",
-                  textAlign: "center",
-                  letterSpacing: "2px"
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "#a8edea";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(168, 237, 234, 0.1)";
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = "#e2e8f0";
-                  e.target.style.boxShadow = "none";
-                }}
-              />
-              <p style={{
-                color: "#718096",
-                fontSize: "12px",
-                margin: "4px 0 0 0",
-                textAlign: "center"
-              }}>
-                OTP sent to your registered mobile number
-              </p>
-            </div>
-          )}
-
-          {/* Buttons */}
-          {!otpSent ? (
-            <button
-              onClick={sendOtp}
-              disabled={loading}
-              style={{
-                width: "100%",
-                padding: "14px 20px",
-                background: loading ? "#a0aec0" : "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                fontSize: "16px",
-                fontWeight: "600",
-                cursor: loading ? "not-allowed" : "pointer",
-                transition: "transform 0.2s, box-shadow 0.2s",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px"
-              }}
-              onMouseEnter={(e) => {
-                if (!loading) {
-                  e.target.style.transform = "translateY(-2px)";
-                  e.target.style.boxShadow = "0 8px 25px rgba(168, 237, 234, 0.3)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "none";
-              }}
-            >
-              {loading ? (
-                <>
-                  <div style={{
-                    width: "16px",
-                    height: "16px",
-                    border: "2px solid #ffffff",
-                    borderTop: "2px solid transparent",
-                    borderRadius: "50%",
-                    animation: "spin 1s linear infinite"
-                  }}></div>
-                  Sending OTP...
-                </>
-              ) : (
-                <>
-                  📱 Send OTP
-                </>
-              )}
-            </button>
-          ) : (
-            <div style={{ display: "flex", gap: "12px" }}>
-              <button
-                onClick={goBackToStep1}
-                disabled={loading}
-                style={{
-                  flex: 1,
-                  padding: "14px 20px",
-                  background: "#f7fafc",
-                  color: "#4a5568",
-                  border: "2px solid #e2e8f0",
-                  borderRadius: "8px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  transition: "all 0.2s"
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.borderColor = "#cbd5e1";
-                  e.target.style.background = "#f1f5f9";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.borderColor = "#e2e8f0";
-                  e.target.style.background = "#f7fafc";
-                }}
-              >
-                ← Back
-              </button>
-              <button
-                onClick={verifyOtp}
-                disabled={loading}
-                style={{
-                  flex: 1,
-                  padding: "14px 20px",
-                  background: loading ? "#a0aec0" : "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  transition: "transform 0.2s, box-shadow 0.2s",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px"
-                }}
-                onMouseEnter={(e) => {
-                  if (!loading) {
-                    e.target.style.transform = "translateY(-2px)";
-                    e.target.style.boxShadow = "0 8px 25px rgba(168, 237, 234, 0.3)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "translateY(0)";
-                  e.target.style.boxShadow = "none";
-                }}
-              >
-                {loading ? (
-                  <>
-                    <div style={{
-                      width: "16px",
-                      height: "16px",
-                      border: "2px solid #ffffff",
-                      borderTop: "2px solid transparent",
-                      borderRadius: "50%",
-                      animation: "spin 1s linear infinite"
-                    }}></div>
-                    Verifying...
-                  </>
-                ) : (
-                  <>
-                    ✅ Verify OTP
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-
-          {/* Footer */}
-          <div style={{
-            textAlign: "center",
-            paddingTop: "20px",
-            borderTop: "1px solid #e2e8f0",
-            marginTop: "24px"
-          }}>
-            <p style={{
-              color: "#718096",
-              fontSize: "14px",
-              margin: "0 0 12px 0"
-            }}>
-              Already have an account?
+          <div className="mt-8 text-center pt-6 border-t border-gray-100">
+            <p className="text-sm text-gray-500">
+              Already have an account?{" "}
+              <a href="/login/patient" className="text-teal-600 font-semibold hover:text-teal-700">
+                Login here
+              </a>
             </p>
-            <a
-              href="/login/patient"
-              style={{
-                color: "#a8edea",
-                textDecoration: "none",
-                fontWeight: "600",
-                fontSize: "14px",
-                transition: "color 0.2s"
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.color = "#fed6e3";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.color = "#a8edea";
-              }}
-            >
-              Login here
-            </a>
           </div>
-
-          {/* Add CSS animation for loading spinner */}
-          <style>
-            {`
-              @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-              }
-            `}
-          </style>
         </div>
       </div>
     );
   }
 
-  // Step 2: Registration Form with pre-populated data
+  // Step 2
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "20px",
-      fontFamily: "'Inter', system-ui, sans-serif"
-    }}>
-      <div style={{
-        background: "white",
-        borderRadius: "16px",
-        boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
-        padding: "40px",
-        width: "100%",
-        maxWidth: "500px",
-        position: "relative",
-        overflow: "hidden",
-        maxHeight: "90vh",
-        overflowY: "auto"
-      }}>
-        {/* Patient Icon */}
-        <div style={{
-          position: "absolute",
-          top: "-20px",
-          right: "-20px",
-          width: "80px",
-          height: "80px",
-          background: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontSize: "24px",
-          fontWeight: "bold"
-        }}>
-          👤
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-pink-50 flex items-center justify-center p-4 font-sans">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative overflow-hidden p-8 border border-white/50 backdrop-blur-sm max-h-[90vh] overflow-y-auto custom-scrollbar">
+
+        <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-teal-200 to-pink-200 rounded-full flex items-center justify-center text-white text-3xl shadow-lg">
+          <User size={32} />
         </div>
 
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "30px" }}>
-          <h1 style={{
-            color: "#2d3748",
-            fontSize: "28px",
-            fontWeight: "700",
-            margin: "0 0 8px 0"
-          }}>
-            Complete Registration
-          </h1>
-          <p style={{
-            color: "#718096",
-            fontSize: "16px",
-            margin: "0"
-          }}>
-            Step 2: Fill in your details
-          </p>
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Complete Registration</h1>
+          <p className="text-gray-500">Step 2: Confirm Details</p>
         </div>
 
-        {/* Error Message */}
         {error && (
-          <div style={{
-            backgroundColor: "#fed7d7",
-            color: "#c53030",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            border: "1px solid #feb2b2",
-            fontSize: "14px"
-          }}>
-            ⚠️ {error}
+          <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-6 text-sm border border-red-100 flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <span className="font-bold">!</span> {error}
+            </div>
+            {(error.includes("already registered") || error.includes("already exists")) && (
+              <a
+                href="/login/patient"
+                className="text-red-700 font-semibold underline hover:text-red-800 ml-5 text-xs"
+              >
+                Go to Login Page &rarr;
+              </a>
+            )}
           </div>
         )}
 
-        {/* Form */}
-        <div style={{ marginBottom: "24px" }}>
-          {/* Pre-populated fields (read-only) */}
-          <div style={{
-            background: "#f8fafc",
-            padding: "20px",
-            borderRadius: "12px",
-            marginBottom: "24px",
-            border: "1px solid #e2e8f0"
-          }}>
-            <h3 style={{
-              color: "#2d3748",
-              fontSize: "16px",
-              fontWeight: "600",
-              margin: "0 0 16px 0"
-            }}>
-              📋 Auto-filled from Aadhaar
+        <div className="space-y-8">
+          {/* Read Only Section */}
+          <div className="bg-gray-50/80 p-6 rounded-2xl border border-gray-100">
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-400"></span> Verified from Aadhaar
             </h3>
 
-            {/* Name */}
-            <div style={{ marginBottom: "12px" }}>
-              <label style={{
-                display: "block",
-                color: "#4a5568",
-                fontSize: "12px",
-                fontWeight: "600",
-                marginBottom: "4px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px"
-              }}>
-                Full Name
-              </label>
-              <div style={{
-                padding: "8px 12px",
-                background: "white",
-                border: "1px solid #e2e8f0",
-                borderRadius: "6px",
-                color: "#2d3748",
-                fontSize: "14px"
-              }}>
-                {formData.name || "Not available"}
-              </div>
-            </div>
-
-            {/* Date of Birth & Gender Row */}
-            <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
-              <div style={{ flex: 1 }}>
-                <label style={{
-                  display: "block",
-                  color: "#4a5568",
-                  fontSize: "12px",
-                  fontWeight: "600",
-                  marginBottom: "4px",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.5px"
-                }}>
-                  Date of Birth
-                </label>
-                <div style={{
-                  padding: "8px 12px",
-                  background: "white",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "6px",
-                  color: "#2d3748",
-                  fontSize: "14px"
-                }}>
-                  {formData.dateOfBirth || "Not available"}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs text-gray-500 font-medium mb-1 block">Full Name</label>
+                <div className="bg-white p-3 rounded-xl border border-gray-200 text-gray-700 text-sm font-medium flex items-center gap-2">
+                  <User size={16} className="text-gray-400" /> {formData.name}
                 </div>
               </div>
-              <div style={{ flex: 1 }}>
-                <label style={{
-                  display: "block",
-                  color: "#4a5568",
-                  fontSize: "12px",
-                  fontWeight: "600",
-                  marginBottom: "4px",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.5px"
-                }}>
-                  Gender
-                </label>
-                <div style={{
-                  padding: "8px 12px",
-                  background: "white",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "6px",
-                  color: "#2d3748",
-                  fontSize: "14px"
-                }}>
-                  {formData.gender || "Not available"}
+              <div>
+                <label className="text-xs text-gray-500 font-medium mb-1 block">Phone (Linked)</label>
+                <div className="bg-white p-3 rounded-xl border border-gray-200 text-gray-700 text-sm font-medium flex items-center gap-2">
+                  <Phone size={16} className="text-gray-400" /> {formData.phone || "Not linked"}
                 </div>
               </div>
-            </div>
-
-            {/* Address */}
-            <div style={{ marginBottom: "12px" }}>
-              <label style={{
-                display: "block",
-                color: "#4a5568",
-                fontSize: "12px",
-                fontWeight: "600",
-                marginBottom: "4px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px"
-              }}>
-                Address
-              </label>
-              <div style={{
-                padding: "8px 12px",
-                background: "white",
-                border: "1px solid #e2e8f0",
-                borderRadius: "6px",
-                color: "#2d3748",
-                fontSize: "14px",
-                minHeight: "40px",
-                wordWrap: "break-word"
-              }}>
-                {formData.address || "Not available"}
+              <div>
+                <label className="text-xs text-gray-500 font-medium mb-1 block">Date of Birth</label>
+                <div className="bg-white p-3 rounded-xl border border-gray-200 text-gray-700 text-sm font-medium flex items-center gap-2">
+                  <Calendar size={16} className="text-gray-400" /> {formData.dateOfBirth}
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 font-medium mb-1 block">Gender</label>
+                <div className="bg-white p-3 rounded-xl border border-gray-200 text-gray-700 text-sm font-medium flex items-center gap-2">
+                  <Users size={16} className="text-gray-400" /> {formData.gender}
+                </div>
+              </div>
+              <div className="md:col-span-2">
+                <label className="text-xs text-gray-500 font-medium mb-1 block">Address</label>
+                <div className="bg-white p-3 rounded-xl border border-gray-200 text-gray-700 text-sm font-medium flex items-center gap-2">
+                  <MapPin size={16} className="text-gray-400" /> {formData.address}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Manual entry fields */}
-          <div style={{
-            borderTop: "1px solid #e2e8f0",
-            paddingTop: "24px"
-          }}>
-            <h3 style={{
-              color: "#2d3748",
-              fontSize: "16px",
-              fontWeight: "600",
-              margin: "0 0 16px 0"
-            }}>
-              📝 Additional Information
+          {/* Editable Section */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 border-t pt-6">
+              Additional Details
             </h3>
 
-            {/* Email */}
-            <div style={{ marginBottom: "16px" }}>
-              <label style={{
-                display: "block",
-                color: "#4a5568",
-                fontSize: "14px",
-                fontWeight: "600",
-                marginBottom: "6px"
-              }}>
-                Email Address *
-              </label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleChange}
-                disabled={loading}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  border: "2px solid #e2e8f0",
-                  borderRadius: "8px",
-                  fontSize: "16px",
-                  transition: "border-color 0.2s, box-shadow 0.2s",
-                  outline: "none",
-                  boxSizing: "border-box"
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "#a8edea";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(168, 237, 234, 0.1)";
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = "#e2e8f0";
-                  e.target.style.boxShadow = "none";
-                }}
-              />
-            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="john@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-200 focus:border-teal-400 outline-none transition-all pl-10"
+                  />
+                  <Mail className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                </div>
+              </div>
 
-            {/* Phone */}
-            <div style={{ marginBottom: "16px" }}>
-              <label style={{
-                display: "block",
-                color: "#4a5568",
-                fontSize: "14px",
-                fontWeight: "600",
-                marginBottom: "6px"
-              }}>
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Enter your phone number"
-                value={formData.phone}
-                onChange={handleChange}
-                disabled={loading}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  border: "2px solid #e2e8f0",
-                  borderRadius: "8px",
-                  fontSize: "16px",
-                  transition: "border-color 0.2s, box-shadow 0.2s",
-                  outline: "none",
-                  boxSizing: "border-box"
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "#a8edea";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(168, 237, 234, 0.1)";
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = "#e2e8f0";
-                  e.target.style.boxShadow = "none";
-                }}
-              />
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Blood Group *</label>
+                <div className="relative">
+                  <select
+                    name="bloodGroup"
+                    value={formData.bloodGroup}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-200 focus:border-teal-400 outline-none transition-all pl-10 appearance-none bg-white"
+                  >
+                    <option value="">Select Group</option>
+                    {bloodGroups.map(bg => (
+                      <option key={bg} value={bg}>{bg}</option>
+                    ))}
+                  </select>
+                  <Droplet className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                </div>
+              </div>
             </div>
+          </div>
 
-            {/* Password */}
-            <div style={{ marginBottom: "16px" }}>
-              <label style={{
-                display: "block",
-                color: "#4a5568",
-                fontSize: "14px",
-                fontWeight: "600",
-                marginBottom: "6px"
-              }}>
-                Password *
-              </label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Create a password (min 6 characters)"
-                value={formData.password}
-                onChange={handleChange}
-                disabled={loading}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  border: "2px solid #e2e8f0",
-                  borderRadius: "8px",
-                  fontSize: "16px",
-                  transition: "border-color 0.2s, box-shadow 0.2s",
-                  outline: "none",
-                  boxSizing: "border-box"
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "#a8edea";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(168, 237, 234, 0.1)";
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = "#e2e8f0";
-                  e.target.style.boxShadow = "none";
-                }}
-              />
-            </div>
+          {/* Nominee Section */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 border-t pt-6">
+              Nominee Details
+            </h3>
 
-            {/* Confirm Password */}
-            <div style={{ marginBottom: "24px" }}>
-              <label style={{
-                display: "block",
-                color: "#4a5568",
-                fontSize: "14px",
-                fontWeight: "600",
-                marginBottom: "6px"
-              }}>
-                Confirm Password *
-              </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                disabled={loading}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  border: "2px solid #e2e8f0",
-                  borderRadius: "8px",
-                  fontSize: "16px",
-                  transition: "border-color 0.2s, box-shadow 0.2s",
-                  outline: "none",
-                  boxSizing: "border-box"
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "#a8edea";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(168, 237, 234, 0.1)";
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = "#e2e8f0";
-                  e.target.style.boxShadow = "none";
-                }}
-              />
+            <div className="grid md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Nominee Name *</label>
+                <input
+                  type="text"
+                  name="nomineeName"
+                  placeholder="Full Name"
+                  value={formData.nomineeName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-200 focus:border-teal-400 outline-none transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Relation *</label>
+                <select
+                  name="nomineeRelation"
+                  value={formData.nomineeRelation}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-200 focus:border-teal-400 outline-none transition-all bg-white"
+                >
+                  <option value="">Select Relation</option>
+                  <option value="Spouse">Spouse</option>
+                  <option value="Parent">Parent</option>
+                  <option value="Child">Child</option>
+                  <option value="Sibling">Sibling</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Nominee Phone *</label>
+                <input
+                  type="tel"
+                  name="nomineePhone"
+                  placeholder="Phone Number"
+                  value={formData.nomineePhone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-200 focus:border-teal-400 outline-none transition-all"
+                />
+              </div>
             </div>
           </div>
 
           <button
             onClick={register}
             disabled={loading}
-            style={{
-              width: "100%",
-              padding: "14px 20px",
-              background: loading ? "#a0aec0" : "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "16px",
-              fontWeight: "600",
-              cursor: loading ? "not-allowed" : "pointer",
-              transition: "transform 0.2s, box-shadow 0.2s",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px"
-            }}
-            onMouseEnter={(e) => {
-              if (!loading) {
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.boxShadow = "0 8px 25px rgba(168, 237, 234, 0.3)";
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.boxShadow = "none";
-            }}
+            className="w-full py-4 bg-gradient-to-r from-teal-400 to-teal-500 text-white rounded-xl font-bold text-lg shadow-xl shadow-teal-200 hover:shadow-teal-300 transform hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-8"
           >
-            {loading ? (
-              <>
-                <div style={{
-                  width: "16px",
-                  height: "16px",
-                  border: "2px solid #ffffff",
-                  borderTop: "2px solid transparent",
-                  borderRadius: "50%",
-                  animation: "spin 1s linear infinite"
-                }}></div>
-                Creating Account...
-              </>
-            ) : (
-              <>
-                👤 Create Patient Account
-              </>
-            )}
+            {loading ? <Loader2 className="animate-spin" size={24} /> : "Complete Registration"}
           </button>
-        </div>
 
-        {/* Footer */}
-        <div style={{
-          textAlign: "center",
-          paddingTop: "20px",
-          borderTop: "1px solid #e2e8f0"
-        }}>
-          <button
-            onClick={goBackToStep1}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#a8edea",
-              textDecoration: "underline",
-              cursor: "pointer",
-              fontSize: "14px",
-              fontWeight: "600",
-              transition: "color 0.2s"
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.color = "#fed6e3";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = "#a8edea";
-            }}
-          >
-            ← Back to Step 1
-          </button>
-        </div>
+          <div className="mt-6 text-center pt-6 border-t border-gray-100">
+            <p className="text-sm text-gray-500">
+              Already have an account?{" "}
+              <a href="/login/patient" className="text-teal-600 font-semibold hover:text-teal-700">
+                Login here
+              </a>
+            </p>
+          </div>
 
-        {/* Add CSS animation for loading spinner */}
-        <style>
-          {`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}
-        </style>
+        </div>
       </div>
     </div>
   );

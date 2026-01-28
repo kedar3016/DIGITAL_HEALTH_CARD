@@ -2,7 +2,7 @@
 {
     public class VerifyLoginOtpDto
     {
-        public long PhoneNumber { get; set; }
+        public long AadhaarNumber { get; set; }
         public string Otp { get; set; }
     }
 }

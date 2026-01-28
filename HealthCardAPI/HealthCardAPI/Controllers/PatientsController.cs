@@ -47,15 +47,46 @@ namespace HealthCardAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var patient = _service.RegisterPatient(dto);
+            try
+            {
+                var patient = _service.RegisterPatient(dto);
+
+                return Ok(new
+                {
+                    patient.Id,
+                    patient.HealthCardNumber,
+                    Message = "Patient registered successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+        [Authorize(Roles = "Patient")]
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            var patientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var patient = await _context.Patients
+                .FirstOrDefaultAsync(p => p.Id == patientId);
+
+            if (patient == null)
+                return NotFound("Patient not found");
 
             return Ok(new
             {
-                patient.Id,
+                patient.Name,
+                patient.Gender,
+                patient.BloodGroup,
+                patient.PhoneNumber,
                 patient.HealthCardNumber,
-                Message = "Patient registered successfully"
+                patient.DateOfBirth,
+                patient.Address
             });
         }
+
         [Authorize]
         [HttpGet("health-card")]
         public IActionResult DownloadHealthCard()

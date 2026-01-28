@@ -21,13 +21,23 @@ export default function VerifyOtp() {
     setError("");
 
     try {
-      const res = await api.post("/api/aadhaar/verify-otp", {
+      const res = await api.post("/api/auth/verify-login-otp", {
         aadhaarNumber: aadhaar,
         otp
       });
 
-      localStorage.setItem("token", res.data.token);
+      console.log("Verify OTP Response:", res.data); // DEBUG LOG
+
+      const token = res.data.token || res.data.Token;
+      if (!token) {
+        console.error("Token missing in response!", res.data);
+        setError("Login failed: Token missing from server response.");
+        return;
+      }
+
+      localStorage.setItem("token", token);
       localStorage.setItem("role", "Patient");
+      localStorage.setItem("aadhaar", aadhaar);
       localStorage.removeItem("session_warning_shown");
 
       navigate("/patient/dashboard");

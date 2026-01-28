@@ -21,7 +21,8 @@ public class MedicalReportsController : ControllerBase
 
     // ✅ UPLOAD PDF
     [Authorize]
-    [Authorize(Roles = "Doctor")]
+    [Authorize]
+    [Authorize(Roles = "Patient,Doctor")]
     [HttpPost("upload")]
     public async Task<IActionResult> Upload(IFormFile file)
     {
@@ -60,7 +61,7 @@ public class MedicalReportsController : ControllerBase
 
     // ✅ VIEW REPORTS
     [Authorize]
-    [Authorize(Roles = "Doctor")]
+    [Authorize(Roles = "Patient")]
     [HttpGet]
     public IActionResult GetReports()
     {

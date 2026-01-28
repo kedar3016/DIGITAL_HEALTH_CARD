@@ -75,8 +75,8 @@ export default function Navbar() {
           transition: "color 0.3s ease",
           fontSize: "16px"
         }}
-        onMouseEnter={(e) => e.target.style.color = "#667eea"}
-        onMouseLeave={(e) => e.target.style.color = "#0f172a"}>
+          onMouseEnter={(e) => e.target.style.color = "#667eea"}
+          onMouseLeave={(e) => e.target.style.color = "#0f172a"}>
           Home
         </Link>
 
@@ -85,32 +85,34 @@ export default function Navbar() {
           <button
             onClick={toggleDropdown}
             style={{
-              background: "none",
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
               border: "none",
               fontWeight: "600",
-              color: "#0f172a",
+              color: "white",
               cursor: "pointer",
-              padding: "8px 16px",
-              borderRadius: "8px",
+              padding: "10px 24px",
+              borderRadius: "50px",
               transition: "all 0.3s ease",
               fontSize: "16px",
               display: "flex",
               alignItems: "center",
-              gap: "6px"
+              gap: "8px",
+              boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)"
             }}
             onMouseEnter={(e) => {
-              e.target.style.background = "rgba(102, 126, 234, 0.1)";
-              e.target.style.color = "#667eea";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 6px 20px rgba(118, 75, 162, 0.4)";
             }}
             onMouseLeave={(e) => {
-              e.target.style.background = "none";
-              e.target.style.color = "#0f172a";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 4px 14px rgba(0, 0, 0, 0.15)";
             }}
           >
-            Login
+            Get Started
             <span style={{
               transition: "transform 0.3s ease",
-              transform: isDropdownOpen ? "rotate(180deg)" : "rotate(0deg)"
+              transform: isDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+              fontSize: "12px"
             }}>▼</span>
           </button>
 

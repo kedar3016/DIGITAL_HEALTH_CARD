@@ -17,33 +17,70 @@ namespace HealthCardAPI.Services
                 {
                     page.Size(PageSizes.A4);
                     page.Margin(30);
-                    page.DefaultTextStyle(x => x.FontSize(12));
+                    page.DefaultTextStyle(x => x.FontSize(11).FontFamily(Fonts.Arial));
 
-                    page.Header()
-                        .Text("SMART HEALTH CARD")
-                        .FontSize(22)
-                        .Bold()
-                        .AlignCenter();
-
-                    page.Content().Column(col =>
+                    page.Content().AlignCenter().Column(col => 
                     {
-                        col.Spacing(10);
+                        // Draw the ID Card centered on the page
+                        col.Item().Width(400).Border(1).BorderColor(Colors.Grey.Lighten2).Background(Colors.White).Column(card =>
+                        {
+                            // 1. Header with Gradient-like color
+                            card.Item().Background("#f5576c").Padding(15).Row(row =>
+                            {
+                                row.RelativeItem().Column(c =>
+                                {
+                                    c.Item().Text("SMART HEALTH CARD").FontSize(18).Bold().FontColor(Colors.White);
+                                    c.Item().Text("Digital Health Identity").FontSize(10).FontColor(Colors.White.Medium);
+                                });
+                                // Placeholder for Logo/Icon
+                                row.ConstantItem(40).AlignRight().Text("🏥").FontSize(24);
+                            });
 
-                        col.Item().Text($"Health Card Number: {patient.HealthCardNumber}").Bold();
-                        col.Item().Text($"Name: {patient.Name}");
-                        col.Item().Text($"Date of Birth: {patient.DateOfBirth:dd-MM-yyyy}");
-                        col.Item().Text($"Gender: {patient.Gender}");
-                        col.Item().Text($"Blood Group: {patient.BloodGroup}");
-                        col.Item().Text($"Phone: {patient.PhoneNumber}");
-                        col.Item().Text($"Aadhaar: XXXX-XXXX-{patient.AadhaarNumber % 10000}");
-                        col.Item().Text($"Nominee: {nominee?.Name ?? "Not Added"}");
-                        col.Item().Text($"Issued On: {DateTime.Now:dd-MM-yyyy}");
+                            // 2. Main Content
+                            card.Item().Padding(20).Row(row =>
+                            {
+                                // Left: Photo Placeholder
+                                row.ConstantItem(100).Column(photoCol =>
+                                {
+                                    photoCol.Item().Height(100).Width(100).Background(Colors.Grey.Lighten4).AlignMiddle().AlignCenter().Text("PHOTO").FontSize(10).FontColor(Colors.Grey.Darken1);
+                                });
+
+                                row.Spacing(20);
+
+                                // Right: Details
+                                row.RelativeItem().Column(details =>
+                                {
+                                    details.Spacing(5);
+
+                                    details.Item().Text(t => { t.Span("Name: ").Bold().Color(Colors.Grey.Darken2); t.Span(patient.Name).SemiBold().FontSize(14); });
+                                    details.Item().Text(t => { t.Span("Card No: ").Bold().Color(Colors.Grey.Darken2); t.Span(patient.HealthCardNumber).FontColor("#f5576c"); });
+                                    
+                                    details.Item().PaddingTop(5).LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
+                                    details.Item().PaddingTop(5);
+
+                                    details.Item().Text(t => { t.Span("DOB: ").Bold(); t.Span($"{patient.DateOfBirth:dd MMM yyyy}"); });
+                                    details.Item().Text(t => { t.Span("Gender: ").Bold(); t.Span(patient.Gender); });
+                                    details.Item().Text(t => { t.Span("Blood Group: ").Bold(); t.Span(patient.BloodGroup); });
+                                    details.Item().Text(t => { t.Span("Mobile: ").Bold(); t.Span(patient.PhoneNumber.ToString()); });
+                                    details.Item().Text(t => { t.Span("Nominee: ").Bold(); t.Span(nominee?.Name ?? "N/A"); });
+                                });
+                            });
+
+                            // 3. Footer / Barcode Area
+                            card.Item().Padding(15).Background(Colors.Grey.Lighten5).Row(row => 
+                            {
+                                row.RelativeItem().Column(c => 
+                                {
+                                    c.Item().Text($"Issued: {DateTime.Now:dd-MM-yyyy}").FontSize(9).FontColor(Colors.Grey.Darken1);
+                                    c.Item().Text("Keep this card safe").FontSize(8).Italic().FontColor(Colors.Grey.Darken1);
+                                });
+
+                                row.ConstantItem(100).AlignRight().AlignMiddle().Text("||| || ||| ||").FontSize(12); // Mock Barcode
+                            });
+                        });
                     });
 
-                    page.Footer()
-                        .AlignCenter()
-                        .Text("AarogyaCard • Digital Health Identity")
-                        .FontSize(10);
+                    page.Footer().AlignCenter().Text("Generated by AarogyaCard Portal").FontSize(9).FontColor(Colors.Grey.Medium);
                 });
             });
 
