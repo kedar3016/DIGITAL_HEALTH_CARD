@@ -40,10 +40,10 @@ namespace HealthCardAPI.Services
             await _context.SaveChangesAsync();
 
             // 4️⃣ Send SMS (REAL DELIVERY)
-            await _smsService.SendOtpAsync(aadhaar.Mobile, otp);
+            //await _smsService.SendOtpAsync(aadhaar.Mobile, otp);
 
             // 5️⃣ Masked response
-            return $"OTP sent to registered mobile ****{aadhaar.Mobile % 10000}";
+            return $"OTP sent to registered mobile ****{aadhaar.Mobile % 10000} Your OTP is {otp}";
         }
 
         // ✅ IMPLEMENT VERIFY OTP

@@ -1,0 +1,211 @@
+/* Doctor Dashboard Styles */
+
+.doctor-dashboard {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.doctor-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.doctor-header {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.doctor-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.doctor-profile {
+  flex: 1;
+}
+
+.doctor-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.doctor-specialty {
+  color: #666;
+  font-size: 1rem;
+}
+
+.logout-btn {
+  background-color: #dc2626;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #991b1b;
+}
+
+.patients-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 0.5rem;
+}
+
+.patients-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.patients-table thead {
+  background-color: #f3f4f6;
+}
+
+.patients-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.patients-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  color: #666;
+}
+
+.patients-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.action-btn {
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.view-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.view-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}
+
+.error-message {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 1rem;
+  border-left: 4px solid #dc2626;
+}
+
+.no-patients {
+  text-align: center;
+  color: #999;
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+.confirmation-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+}
+
+.dialog-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.dialog-message {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.dialog-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.confirm-btn,
+.cancel-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.confirm-btn {
+  background-color: #dc2626;
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: #991b1b;
+}
+
+.cancel-btn {
+  background-color: #e5e7eb;
+  color: #333;
+}
+
+.cancel-btn:hover {
+  background-color: #d1d5db;
+}
