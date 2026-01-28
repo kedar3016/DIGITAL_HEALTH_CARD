@@ -145,17 +145,4 @@ CREATE TABLE HealthRecord (
     FOREIGN KEY (LabId) REFERENCES Lab(LabId)
 );
 ________________________________________
-8️. Consent Table (PATIENT DATA SHARING CONTROL)
-CREATE TABLE Consent (			
-    ConsentId INT AUTO_INCREMENT PRIMARY KEY,
-
-    PatientId INT,
-    GrantedToRole ENUM('DOCTOR','LAB'),
-    GrantedToId INT,
-
-    IsActive BOOLEAN DEFAULT TRUE,
-    GrantedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (PatientId) REFERENCES Patient(PatientId)
-);
 
