@@ -67,7 +67,13 @@ public class PatientService : IPatientService
 
     public IEnumerable<Patient> GetAllPatients()
     {
-        throw new NotImplementedException();
+        return _context.Patients.ToList();
+        // throw new NotImplementedException();
+    }
+    public Patient? GetByAadhaar(long aadhaar)
+    {
+        return _context.Patients
+            .FirstOrDefault(p => p.AadhaarNumber == aadhaar);
     }
     public async Task<string> SendOtpAsync(long aadhaarNumber)
     {

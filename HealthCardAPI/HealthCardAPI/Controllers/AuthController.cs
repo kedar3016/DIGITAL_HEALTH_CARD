@@ -42,9 +42,9 @@ namespace HealthCardAPI.Controllers
 
             await _context.SaveChangesAsync();
 
-            await _smsService.SendOtpAsync(dto.PhoneNumber, otp);
+            //await _smsService.SendOtpAsync(dto.PhoneNumber, otp); For Testing Purspose Pause
 
-            return Ok("OTP sent to registered mobile number");
+            return Ok($"OTP sent to registered mobile number Your Otp Is {otp}");
         }
         [HttpPost("verify-login-otp")]
         public async Task<IActionResult> VerifyLoginOtp(VerifyLoginOtpDto dto)

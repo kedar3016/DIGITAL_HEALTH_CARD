@@ -32,11 +32,10 @@ namespace HealthCardAPI.Controllers
         [HttpGet("{aadhaar}")]
         public IActionResult GetByAadhaar(long aadhaar)
         {
-            var patient = _service.GetAllPatients()
-                .FirstOrDefault(p => p.AadhaarNumber == aadhaar);
+            var patient = _service.GetByAadhaar(aadhaar);
 
             if (patient == null)
-                return NotFound();
+                return NotFound("Patient not found");
 
             return Ok(patient);
         }
@@ -82,11 +81,11 @@ namespace HealthCardAPI.Controllers
 
         // 🧑‍🔬 LAB TECH – READ ONLY PATIENT DATA
         [Authorize(Roles = "LabTechnician")]
-        [HttpGet("readonly/{patientId}")]
-        public IActionResult GetPatientReadonly(int patientId)
+        [HttpGet("readonly/{healthCardId}")]
+        public IActionResult GetPatientReadonly(string healthCardId)
         {
             var patient = _context.Patients
-                .Where(p => p.Id == patientId)
+                .Where(p => p.HealthCardNumber == healthCardId)
                 .Select(p => new
                 {
                     p.Id,
