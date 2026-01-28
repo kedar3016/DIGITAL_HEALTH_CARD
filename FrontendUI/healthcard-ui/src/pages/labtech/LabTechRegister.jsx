@@ -9,23 +9,25 @@ export default function LabTechRegister() {
     password: "",
     confirmPassword: "",
     labName: "",
-    licenseNumber: "",
-    phone: ""
+    phone: "",
+    labAddress: "",
+    isActive: false
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value
     });
   };
 
   const register = async () => {
     // Validation
-    if (!formData.name || !formData.email || !formData.password || !formData.labName || !formData.licenseNumber) {
+    if (!formData.name || !formData.email || !formData.password || !formData.labName || !formData.isActive) {
       setError("Please fill in all required fields");
       return;
     }
@@ -49,8 +51,9 @@ export default function LabTechRegister() {
         email: formData.email,
         password: formData.password,
         labName: formData.labName,
-        licenseNumber: formData.licenseNumber,
         phone: formData.phone,
+        labAddress: formData.labAddress,
+        isActive: formData.isActive,
         experience: formData.experience
       });
 
@@ -149,7 +152,7 @@ export default function LabTechRegister() {
               fontWeight: "600",
               marginBottom: "6px"
             }}>
-              Full Name *
+              TechnicianName *
             </label>
             <input
               type="text"
@@ -335,47 +338,10 @@ export default function LabTechRegister() {
             />
           </div>
 
-          {/* License Number */}
-          <div style={{ marginBottom: "16px" }}>
-            <label style={{
-              display: "block",
-              color: "#4a5568",
-              fontSize: "14px",
-              fontWeight: "600",
-              marginBottom: "6px"
-            }}>
-              Lab License Number *
-            </label>
-            <input
-              type="text"
-              name="licenseNumber"
-              placeholder="Enter your lab license number"
-              value={formData.licenseNumber}
-              onChange={handleChange}
-              disabled={loading}
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                border: "2px solid #e2e8f0",
-                borderRadius: "8px",
-                fontSize: "16px",
-                transition: "border-color 0.2s, box-shadow 0.2s",
-                outline: "none",
-                boxSizing: "border-box"
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = "#4facfe";
-                e.target.style.boxShadow = "0 0 0 3px rgba(79, 172, 254, 0.1)";
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = "#e2e8f0";
-                e.target.style.boxShadow = "none";
-              }}
-            />
-          </div>
+
 
           {/* Phone */}
-          <div style={{ marginBottom: "24px" }}>
+          <div style={{ marginBottom: "16px" }}>
             <label style={{
               display: "block",
               color: "#4a5568",
@@ -411,6 +377,71 @@ export default function LabTechRegister() {
                 e.target.style.boxShadow = "none";
               }}
             />
+          </div>
+
+          {/* Lab Address */}
+          <div style={{ marginBottom: "16px" }}>
+            <label style={{
+              display: "block",
+              color: "#4a5568",
+              fontSize: "14px",
+              fontWeight: "600",
+              marginBottom: "6px"
+            }}>
+              Lab Address
+            </label>
+            <input
+              type="text"
+              name="labAddress"
+              placeholder="Enter your laboratory address"
+              value={formData.labAddress}
+              onChange={handleChange}
+              disabled={loading}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "2px solid #e2e8f0",
+                borderRadius: "8px",
+                fontSize: "16px",
+                transition: "border-color 0.2s, box-shadow 0.2s",
+                outline: "none",
+                boxSizing: "border-box"
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "#4facfe";
+                e.target.style.boxShadow = "0 0 0 3px rgba(79, 172, 254, 0.1)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "#e2e8f0";
+                e.target.style.boxShadow = "none";
+              }}
+            />
+          </div>
+
+          {/* Is Active */}
+          <div style={{ marginBottom: "24px" }}>
+            <label style={{
+              display: "flex",
+              alignItems: "center",
+              color: "#4a5568",
+              fontSize: "14px",
+              fontWeight: "600",
+              marginBottom: "6px"
+            }}>
+              <input
+                type="checkbox"
+                name="isActive"
+                checked={formData.isActive}
+                onChange={handleChange}
+                disabled={loading}
+                style={{
+                  marginRight: "8px",
+                  width: "16px",
+                  height: "16px"
+                }}
+              />
+              Is Active *
+            </label>
           </div>
 
           <button

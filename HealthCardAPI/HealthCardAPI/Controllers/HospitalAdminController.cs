@@ -47,15 +47,54 @@ namespace HealthCardAPI.Controllers
                 return NotFound("Doctor not found");
 
             doctor.IsVerified = true;
-            doctor.Password = "doctor@123"; // default password (tell doctor to change later)
+            doctor.Password = "doctor@123"; // default password
 
             await _context.SaveChangesAsync();
 
             return Ok("Doctor verified. Login credentials activated.");
         }
- 
 
-        [Authorize(Roles = "HospitalAdmin")]
+        // 🔍 VIEW PENDING LAB TECHNICIANS
+        [HttpGet("pending-lab-technicians")]
+        public IActionResult GetPendingLabTechnicians()
+        {
+            var technicians = _context.LabTechnicians
+                .Where(lt => !lt.IsActive) // Fetching technicians where IsActive is false
+                .Select(lt => new
+                {
+                    lt.Id,
+                    lt.TechnicianName,
+                    lt.LabName,
+                    lt.LabAddress,
+                    lt.PhoneNumber,
+                    lt.Email
+                })
+                .ToList();
+
+            return Ok(technicians);
+        }
+
+        // ✅ VERIFY LAB TECHNICIAN
+        [HttpPost("verify-lab-technician/{techId}")]
+        public async Task<IActionResult> VerifyLabTechnician(int techId)
+        {
+            var tech = await _context.LabTechnicians.FindAsync(techId);
+
+            if (tech == null)
+                return NotFound("Lab Technician not found");
+
+            tech.IsActive = true;
+            // Optional: Set a default password if they didn't set one during registration
+            if (string.IsNullOrEmpty(tech.Password))
+            {
+                tech.Password = "labtech@123";
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Lab technician verified. Account activated.");
+        }
+
         [HttpPost("register-lab-technician")]
         public async Task<IActionResult> RegisterLabTechnician(RegisterLabTechnicianDto dto)
         {
@@ -75,7 +114,5 @@ namespace HealthCardAPI.Controllers
 
             return Ok("Lab technician registered successfully");
         }
-
-
     }
 }

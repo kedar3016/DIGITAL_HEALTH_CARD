@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { logout } from "../../auth/roleGuard";
 import api from "../../api/axios";
 
@@ -111,7 +110,7 @@ export default function LabDashboard() {
         {/* Navigation */}
         <div style={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           alignItems: "center",
           marginBottom: "30px",
           padding: "20px",
@@ -119,19 +118,6 @@ export default function LabDashboard() {
           borderRadius: "12px",
           color: "white"
         }}>
-          <div>
-            <h3 style={{ margin: "0 0 5px 0", fontSize: "18px" }}>Quick Actions</h3>
-            <Link
-              to="/lab/search"
-              style={{
-                color: "white",
-                textDecoration: "underline",
-                marginRight: "20px"
-              }}
-            >
-              Advanced Search
-            </Link>
-          </div>
           <button
             onClick={logout}
             style={{
