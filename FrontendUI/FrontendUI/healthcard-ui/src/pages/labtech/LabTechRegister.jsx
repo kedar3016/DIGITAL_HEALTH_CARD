@@ -4,51 +4,59 @@ import { useNavigate } from "react-router-dom";
 
 export default function LabTechRegister() {
   const [formData, setFormData] = useState({
-    name: "",
+    technicianName: "",
     email: "",
     password: "",
     confirmPassword: "",
     labName: "",
-    licenseNumber: "",
-    phone: ""
+
+    phoneNumber: "",
+
+
+    labAddress: ""
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value
     });
   };
 
   const register = async () => {
-    // Validation Regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^\d{10}$/;
-    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
+    // Validation
 
-    if (!formData.name.trim()) return setError("Full Name is required");
-    if (!emailRegex.test(formData.email)) return setError("Invalid Email Address");
-    if (!passwordRegex.test(formData.password)) return setError("Password must be >6 chars, include number & special char");
-    if (formData.password !== formData.confirmPassword) return setError("Passwords do not match");
-    if (!formData.labName.trim()) return setError("Lab Name is required");
-    if (!formData.licenseNumber.trim()) return setError("License Number is required");
-    if (!phoneRegex.test(formData.phone)) return setError("Phone number must be exactly 10 digits");
+    if (!formData.technicianName || !formData.email || !formData.password || !formData.labName) {
+
+      setError("Please fill in all required fields");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
 
     setLoading(true);
     setError("");
 
     try {
-      await api.post("/api/auth/lab-tech/register", {
-        TechnicianName: formData.name, // Mapped from name
-        Email: formData.email,
-        Password: formData.password,
-        LabName: formData.labName,
-        LabAddress: formData.licenseNumber, // Mapping License to Address for now
-        PhoneNumber: formData.phone,
-        //experience: formData.experience // Not needed/supported
+      await api.post("/api/LabTechnicians/register", {
+        labName: formData.labName,
+        labAddress: formData.labAddress,
+        technicianName: formData.technicianName,
+        phoneNumber: Number(formData.phoneNumber), // Convert to number for backend
+        email: formData.email,
+        password: formData.password
       });
 
       // Show success message and redirect to login
@@ -146,13 +154,13 @@ export default function LabTechRegister() {
               fontWeight: "600",
               marginBottom: "6px"
             }}>
-              Full Name *
+              TechnicianName *
             </label>
             <input
               type="text"
-              name="name"
+              name="technicianName"
               placeholder="Enter your full name"
-              value={formData.name}
+              value={formData.technicianName}
               onChange={handleChange}
               disabled={loading}
               style={{
@@ -332,7 +340,7 @@ export default function LabTechRegister() {
             />
           </div>
 
-          {/* License Number */}
+          {/* Lab Address */}
           <div style={{ marginBottom: "16px" }}>
             <label style={{
               display: "block",
@@ -341,13 +349,13 @@ export default function LabTechRegister() {
               fontWeight: "600",
               marginBottom: "6px"
             }}>
-              Lab License Number *
+              Lab Address *
             </label>
             <input
               type="text"
-              name="licenseNumber"
-              placeholder="Enter your lab license number"
-              value={formData.licenseNumber}
+              name="labAddress"
+              placeholder="Enter your lab address"
+              value={formData.labAddress}
               onChange={handleChange}
               disabled={loading}
               style={{
@@ -384,9 +392,9 @@ export default function LabTechRegister() {
             </label>
             <input
               type="tel"
-              name="phone"
+              name="phoneNumber"
               placeholder="Enter your phone number"
-              value={formData.phone}
+              value={formData.phoneNumber}
               onChange={handleChange}
               disabled={loading}
               style={{

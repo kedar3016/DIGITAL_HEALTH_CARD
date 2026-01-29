@@ -98,13 +98,13 @@ namespace HealthCardAPI.Controllers
             return File(pdfBytes, "application/pdf", "SmartHealthCard.pdf");
         }
 
-        // 🧑‍🔬 LAB TECH – READ ONLY PATIENT DATA
-        [Authorize(Roles = "LabTechnician")]
-        [HttpGet("readonly/{patientId}")]
-        public IActionResult GetPatientReadonly(int patientId)
+        // 🧑‍🔬 LAB TECH & DOCTOR – READ ONLY PATIENT DATA
+        [Authorize(Roles = "LabTechnician,Doctor")]
+        [HttpGet("readonly/{healthCardId}")]
+        public IActionResult GetPatientReadonly(string healthCardId)
         {
             var patient = _context.Patients
-                .Where(p => p.Id == patientId)
+                .Where(p => p.HealthCardNumber == healthCardId)
                 .Select(p => new
                 {
                     p.Id,

@@ -2,7 +2,7 @@
 using HealthCardAPI.DTOs;
 using HealthCardAPI.Models;
 using HealthCardAPI.Repositories;
-using Microsoft.AspNetCore.Authorization; // Added Authorize support
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +17,25 @@ namespace HealthCardAPI.Controllers
         public DoctorsController(AppDbContext context)
         {
             _context = context;
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMe()
+        {
+            var doctorId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            var doctor = await _context.Doctors.FindAsync(doctorId);
+
+            if (doctor == null) return NotFound();
+
+            return Ok(new
+            {
+                doctor.Name,
+                doctor.Email,
+                doctor.Specialization,
+                doctor.LicenseNumber,
+                doctor.HospitalId
+            });
         }
 
         // 🟢 DOCTOR REGISTRATION
