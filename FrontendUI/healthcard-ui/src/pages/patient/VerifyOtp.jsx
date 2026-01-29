@@ -21,7 +21,7 @@ export default function VerifyOtp() {
     setError("");
 
     try {
-      const res = await api.post("/api/aadhaar/verify-otp", {
+      const res = await api.post("/api/auth/verify-login-otp", {
         aadhaarNumber: aadhaar,
         otp
       });

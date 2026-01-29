@@ -2,6 +2,6 @@
 {
     public class SendLoginOtpDto
     {
-        public long PhoneNumber { get; set; }
+        public long AadhaarNumber { get; set; }
     }
 }

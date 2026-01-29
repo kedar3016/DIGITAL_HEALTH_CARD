@@ -242,6 +242,22 @@ export default function AdminLogin() {
               </>
             )}
           </button>
+
+          <div style={{ textAlign: "right", marginTop: "12px", marginBottom: "12px" }}>
+            <button
+              onClick={() => navigate("/forgot-password/admin")}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "#f093fb",
+                fontSize: "14px",
+                cursor: "pointer",
+                textDecoration: "underline"
+              }}
+            >
+              Forgot Password?
+            </button>
+          </div>
         </div>
 
         {/* Footer */}

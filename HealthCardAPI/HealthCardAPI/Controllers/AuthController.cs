@@ -27,32 +27,38 @@ namespace HealthCardAPI.Controllers
         public async Task<IActionResult> SendLoginOtp(SendLoginOtpDto dto)
         {
             var patient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.PhoneNumber == dto.PhoneNumber);
+                .FirstOrDefaultAsync(p => p.AadhaarNumber == dto.AadhaarNumber);
 
             if (patient == null)
-                return BadRequest("Mobile number not registered");
+                return BadRequest("Aadhaar Number not registered");
 
             var otp = Random.Shared.Next(100000, 999999).ToString();
 
             _context.OtpVerifications.Add(new OtpVerification
             {
-                PhoneNumber = dto.PhoneNumber,
+                PhoneNumber = patient.PhoneNumber, // Use registered phone number
                 Otp = otp,
                 Expiry = DateTime.UtcNow.AddMinutes(5)
             });
 
             await _context.SaveChangesAsync();
 
-            await _smsService.SendOtpAsync(dto.PhoneNumber, otp);
+            await _smsService.SendOtpAsync(patient.PhoneNumber, otp);
 
-            return Ok("OTP sent to registered mobile number");
+            return Ok("OTP sent to registered mobile number linked to Aadhaar");
         }
         [HttpPost("verify-login-otp")]
         public async Task<IActionResult> VerifyLoginOtp(VerifyLoginOtpDto dto)
         {
+            var patient = await _context.Patients
+                .FirstOrDefaultAsync(p => p.AadhaarNumber == dto.AadhaarNumber);
+
+            if (patient == null)
+                return BadRequest("Patient not found");
+
             var record = await _context.OtpVerifications
                 .FirstOrDefaultAsync(o =>
-                    o.PhoneNumber == dto.PhoneNumber &&
+                    o.PhoneNumber == patient.PhoneNumber &&
                     o.Otp == dto.Otp &&
                     o.Expiry > DateTime.UtcNow);
 
@@ -61,9 +67,6 @@ namespace HealthCardAPI.Controllers
 
             _context.OtpVerifications.Remove(record);
             await _context.SaveChangesAsync();
-
-            var patient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.PhoneNumber == dto.PhoneNumber);
 
             return Ok(new
             {
@@ -174,6 +177,96 @@ public async Task<IActionResult> DoctorLogin(DoctorLoginDto dto)
             return Ok(new { Message = "Registration successful! Awaiting Hospital Admin approval." });
         }
 
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+        {
+            string email = dto.Email;
+            long phoneNumber = 0;
+
+            if (dto.Role == "Doctor")
+            {
+                var doc = await _context.Doctors.FirstOrDefaultAsync(d => d.Email == email);
+                if (doc == null) return NotFound("Doctor not found");
+                phoneNumber = doc.PhoneNumber; // Assuming Doctor has Phone property
+            }
+            else if (dto.Role == "LabTechnician")
+            {
+                var lab = await _context.LabTechnicians.FirstOrDefaultAsync(l => l.Email == email);
+                if (lab == null) return NotFound("Lab Technician not found");
+                phoneNumber = lab.PhoneNumber;
+            }
+            // Add Admin handling if Admin has phone/email
+             else if (dto.Role == "HospitalAdmin")
+            {
+                 // Admin usually has username, assuming email usage here or username lookup
+                 // For now, returning specific message as Admin might not have same flow
+                 return BadRequest("Contact System Administrator to reset Admin password.");
+            }
+
+            if (phoneNumber == 0) return BadRequest("No phone number found for this account.");
+
+             var otp = Random.Shared.Next(100000, 999999).ToString();
+             // Store OTP in OtpVerifications (reusing table, using Phone as key)
+             _context.OtpVerifications.Add(new OtpVerification
+            {
+                PhoneNumber = phoneNumber,
+                Otp = otp,
+                Expiry = DateTime.UtcNow.AddMinutes(5)
+            });
+            await _context.SaveChangesAsync();
+            
+            // Send OTP via SMS (or Email if service available, using SMS for now as per stack)
+            await _smsService.SendOtpAsync(phoneNumber, otp);
+
+            return Ok(new { Message = "OTP sent to your registered number.", Otp = otp });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+        {
+             string email = dto.Email;
+             long phoneNumber = 0;
+
+             // Resolve Phone to verify OTP
+             if (dto.Role == "Doctor")
+            {
+                var doc = await _context.Doctors.FirstOrDefaultAsync(d => d.Email == email);
+                if (doc == null) return NotFound("Doctor not found");
+                phoneNumber = doc.PhoneNumber;
+            }
+            else if (dto.Role == "LabTechnician")
+            {
+                var lab = await _context.LabTechnicians.FirstOrDefaultAsync(l => l.Email == email);
+                if (lab == null) return NotFound("Lab Technician not found");
+                phoneNumber = lab.PhoneNumber;
+            }
+
+             var record = await _context.OtpVerifications
+                .FirstOrDefaultAsync(o =>
+                    o.PhoneNumber == phoneNumber &&
+                    o.Otp == dto.Otp &&
+                    o.Expiry > DateTime.UtcNow);
+
+            if (record == null) return BadRequest("Invalid or expired OTP");
+
+            // Update Password
+             if (dto.Role == "Doctor")
+            {
+                var doc = await _context.Doctors.FirstOrDefaultAsync(d => d.Email == email);
+                doc.Password = dto.NewPassword; 
+            }
+             else if (dto.Role == "LabTechnician")
+            {
+                var lab = await _context.LabTechnicians.FirstOrDefaultAsync(l => l.Email == email);
+                lab.Password = dto.NewPassword;
+            }
+
+            _context.OtpVerifications.Remove(record);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Password reset successful. Please login." });
+        }
 
     }
 

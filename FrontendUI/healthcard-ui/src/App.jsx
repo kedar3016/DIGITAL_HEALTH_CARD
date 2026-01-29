@@ -27,8 +27,12 @@ import UploadReport from "./pages/labtech/UploadReport";
 import AdminLogin from "./pages/login/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
+
+
 // Auth
 import ProtectedRoute from "./auth/ProtectedRoute";
+import ForgotPassword from "./pages/login/ForgotPassword";
+import ResetPassword from "./pages/login/ResetPassword";
 
 function App() {
   return (
@@ -124,6 +128,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* 🔐 Password Reset */}
+        <Route path="/forgot-password/:role" element={<ForgotPassword />} />
+        <Route path="/reset-password/:role" element={<ResetPassword />} />
 
       </Routes>
     </BrowserRouter>

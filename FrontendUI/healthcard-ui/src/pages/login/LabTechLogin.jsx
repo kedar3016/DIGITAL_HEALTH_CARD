@@ -244,6 +244,22 @@ export default function LabTechLogin() {
               </>
             )}
           </button>
+
+          <div style={{ textAlign: "right", marginTop: "12px", marginBottom: "12px" }}>
+            <button
+              onClick={() => navigate("/forgot-password/lab")}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "#4facfe",
+                fontSize: "14px",
+                cursor: "pointer",
+                textDecoration: "underline"
+              }}
+            >
+              Forgot Password?
+            </button>
+          </div>
         </div>
 
         {/* Footer */}

@@ -243,6 +243,22 @@ export default function DoctorLogin() {
             )}
           </button>
 
+          <div style={{ textAlign: "right", marginTop: "12px", marginBottom: "12px" }}>
+            <button
+              onClick={() => navigate("/forgot-password/doctor")}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "#667eea",
+                fontSize: "14px",
+                cursor: "pointer",
+                textDecoration: "underline"
+              }}
+            >
+              Forgot Password?
+            </button>
+          </div>
+
           {/* Register Link */}
           <div style={{ marginTop: "16px", textAlign: "center" }}>
             <p style={{
@@ -301,6 +317,6 @@ export default function DoctorLogin() {
           `}
         </style>
       </div>
-    </div>
+    </div >
   );
 }

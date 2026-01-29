@@ -25,21 +25,20 @@ export default function DoctorRegister() {
   };
 
   const register = async () => {
-    // Validation
-    if (!formData.name || !formData.email || !formData.password || !formData.specialization || !formData.licenseNumber) {
-      setError("Please fill in all required fields");
-      return;
-    }
+    // Validation Regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^\d{10}$/;
+    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
-      return;
-    }
+    // Detailed Validation
+    if (!formData.name.trim()) return setError("Full Name is required");
+    if (!emailRegex.test(formData.email)) return setError("Invalid Email Address");
+    if (!passwordRegex.test(formData.password)) return setError("Password must be at least 6 chars, include a number & special char");
+    if (formData.password !== formData.confirmPassword) return setError("Passwords do not match");
+    if (!formData.specialization) return setError("Specialization is required");
+    if (!formData.licenseNumber.trim()) return setError("License Number is required");
+    if (!phoneRegex.test(formData.phone)) return setError("Phone number must be exactly 10 digits");
+    if (!formData.experience || formData.experience < 0) return setError("Valid experience years required");
 
     setLoading(true);
     setError("");

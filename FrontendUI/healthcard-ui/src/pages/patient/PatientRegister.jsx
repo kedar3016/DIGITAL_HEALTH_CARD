@@ -72,18 +72,18 @@ export default function PatientRegister() {
       });
 
       // Fetch patient data after OTP verification
-    const patientData = response.data || {};
+      const patientData = response.data || {};
 
-setFormData({
-  name: patientData.name || "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  phone: patientData.mobile?.toString() || "",
-  dateOfBirth: patientData.dateOfBirth?.split("T")[0] || "",
-  gender: patientData.gender || "",
-  address: patientData.address || ""
-});
+      setFormData({
+        name: patientData.name || "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        phone: patientData.mobile?.toString() || "",
+        dateOfBirth: patientData.dateOfBirth?.split("T")[0] || "",
+        gender: patientData.gender || "",
+        address: patientData.address || ""
+      });
 
       setStep(2);
       setError("");
@@ -103,9 +103,19 @@ setFormData({
   };
 
   const register = async () => {
-    // Validation
-    if (!formData.email || !formData.password) {
-      setError("Please fill in all required fields");
+    // Validation Regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^\d{10}$/;
+    // Password: Min 6, 1 number, 1 special char
+    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
+
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    if (!formData.password || !passwordRegex.test(formData.password)) {
+      setError("Password must be >6 chars with at least 1 number and 1 special char");
       return;
     }
 
@@ -114,8 +124,9 @@ setFormData({
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    // Validate Phone only if manually entered (though usually auto-filled)
+    if (formData.phone && !phoneRegex.test(formData.phone)) {
+      setError("Phone number must be exactly 10 digits");
       return;
     }
 
