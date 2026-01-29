@@ -4,14 +4,9 @@ import {
   FaIdCard,
   FaFileMedical,
   FaDownload,
-<<<<<<< HEAD
-  FaArrowRightFromBracket,
-} from "react-icons/fa6";
-=======
   FaSignOutAlt,
 } from "react-icons/fa";
 import ConfirmationModal from "../../components/ConfirmationModal";
->>>>>>> e98c8329d6a8bc0893e1bbc829545c3d39fc05ae
 
 export default function PatientDashboard() {
   const [patient, setPatient] = useState(null);
@@ -224,80 +219,77 @@ export default function PatientDashboard() {
             </div>
           )}
         </div>
-<<<<<<< HEAD
-        <button style={styles.logoutBtn}>
-          <FaArrowRightFromBracket /> Logout
-        </button>
-=======
->>>>>>> e98c8329d6a8bc0893e1bbc829545c3d39fc05ae
-      </div>
+
+      </div >
 
       {/* MAIN CONTENT */}
-      <div style={styles.grid}>
+      < div style={styles.grid} >
         {/* PATIENT INFO */}
-        <div style={styles.card}>
+        < div style={styles.card} >
           <h3 style={styles.cardTitle}>
             <FaUser /> Patient Information
           </h3>
 
-          {loading ? (
-            <p style={{ color: "#777", textAlign: "center" }}>Loading profile...</p>
-          ) : patient ? (
-            <div style={styles.healthCardContainer}>
-              {/* Visual Card Component */}
-              <div style={styles.digitalCard}>
-                {/* Header */}
-                <div style={styles.cardHeader}>
-                  <div>
-                    <h4 style={{ margin: 0, fontSize: "16px", fontWeight: "700" }}>SMART HEALTH CARD</h4>
-                    <span style={{ fontSize: "10px", opacity: 0.8 }}>Government of India</span>
+          {
+            loading ? (
+              <p style={{ color: "#777", textAlign: "center" }}>Loading profile...</p>
+            ) : patient ? (
+              <div style={styles.healthCardContainer}>
+                {/* Visual Card Component */}
+                <div style={styles.digitalCard}>
+                  {/* Header */}
+                  <div style={styles.cardHeader}>
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: "16px", fontWeight: "700" }}>SMART HEALTH CARD</h4>
+                      <span style={{ fontSize: "10px", opacity: 0.8 }}>Government of India</span>
+                    </div>
+                    <FaIdCard size={24} style={{ opacity: 0.9 }} />
                   </div>
-                  <FaIdCard size={24} style={{ opacity: 0.9 }} />
-                </div>
 
-                {/* Content */}
-                <div style={styles.cardBody}>
-                  <div style={styles.cardPhotoPlaceholder}>
-                    <FaUser size={30} color="#cbd5e0" />
-                  </div>
-                  <div style={styles.cardDetails}>
-                    <div style={styles.detailRow}>
-                      <span style={styles.label}>Card No</span>
-                      <span style={styles.valueHighlight}>{patient.healthCard}</span>
+                  {/* Content */}
+                  <div style={styles.cardBody}>
+                    <div style={styles.cardPhotoPlaceholder}>
+                      <FaUser size={30} color="#cbd5e0" />
                     </div>
-                    <div style={styles.detailRow}>
-                      <span style={styles.label}>Name</span>
-                      <span style={styles.value}>{patient.name}</span>
-                    </div>
-                    <div style={{ display: "flex", gap: "15px", marginTop: "5px" }}>
-                      <div>
-                        <span style={styles.label}>DOB</span><br />
-                        <span style={styles.valueSmall}>{new Date(patient.dateOfBirth || Date.now()).toLocaleDateString("en-GB")}</span>
+                    <div style={styles.cardDetails}>
+                      <div style={styles.detailRow}>
+                        <span style={styles.label}>Card No</span>
+                        <span style={styles.valueHighlight}>{patient.healthCard}</span>
                       </div>
-                      <div>
-                        <span style={styles.label}>Gender</span><br />
-                        <span style={styles.valueSmall}>{patient.gender}</span>
+                      <div style={styles.detailRow}>
+                        <span style={styles.label}>Name</span>
+                        <span style={styles.value}>{patient.name}</span>
                       </div>
-                      <div>
-                        <span style={styles.label}>Blood</span><br />
-                        <span style={styles.valueHighlight}>{patient.bloodGroup}</span>
+                      <div style={{ display: "flex", gap: "15px", marginTop: "5px" }}>
+                        <div>
+                          <span style={styles.label}>DOB</span><br />
+                          <span style={styles.valueSmall}>{new Date(patient.dateOfBirth || Date.now()).toLocaleDateString("en-GB")}</span>
+                        </div>
+                        <div>
+                          <span style={styles.label}>Gender</span><br />
+                          <span style={styles.valueSmall}>{patient.gender}</span>
+                        </div>
+                        <div>
+                          <span style={styles.label}>Blood</span><br />
+                          <span style={styles.valueHighlight}>{patient.bloodGroup}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <p style={{ color: "red", textAlign: "center" }}>Failed to load profile.</p>
-          )}
+            ) : (
+              <p style={{ color: "red", textAlign: "center" }}>Failed to load profile.</p>
+            )
+          }
 
           <button style={styles.primaryBtn} onClick={handleDownloadCard}>
             <FaDownload /> Download Health Card
           </button>
-        </div>
+        </div >
 
         {/* MEDICAL REPORTS */}
-        <div style={styles.card}>
+        < div style={styles.card} >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
             <h3 style={{ margin: 0, display: "flex", alignItems: "center", gap: "10px" }}>
               <FaFileMedical /> Medical Reports
@@ -341,26 +333,30 @@ export default function PatientDashboard() {
             </div>
           </div>
 
-          {reports.length === 0 && (
-            <p style={{ color: "#777" }}>No reports uploaded yet</p>
-          )}
+          {
+            reports.length === 0 && (
+              <p style={{ color: "#777" }}>No reports uploaded yet</p>
+            )
+          }
 
-          {reports.map((r) => (
-            <div key={r.id} style={styles.reportItem}>
-              <div>
-                <strong>{r.name}</strong>
-                <p style={{ fontSize: "13px", color: "#666" }}>{r.date}</p>
+          {
+            reports.map((r) => (
+              <div key={r.id} style={styles.reportItem}>
+                <div>
+                  <strong>{r.name}</strong>
+                  <p style={{ fontSize: "13px", color: "#666" }}>{r.date}</p>
+                </div>
+                <button
+                  style={styles.downloadBtn}
+                  onClick={() => window.open(`http://localhost:5133${r.filePath}`, "_blank")}
+                >
+                  <FaDownload />
+                </button>
               </div>
-              <button
-                style={styles.downloadBtn}
-                onClick={() => window.open(`http://localhost:5133${r.filePath}`, "_blank")}
-              >
-                <FaDownload />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+            ))
+          }
+        </div >
+      </div >
 
       <ConfirmationModal
         isOpen={showLogoutConfirm}
@@ -372,7 +368,7 @@ export default function PatientDashboard() {
         onCancel={() => setShowLogoutConfirm(false)}
         type="danger"
       />
-    </div>
+    </div >
   );
 }
 

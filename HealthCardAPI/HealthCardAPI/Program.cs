@@ -6,7 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QuestPDF.Infrastructure;
+
+
+
+
 using System.Text;
+
+
 
 internal class Program
 {
@@ -15,8 +21,11 @@ internal class Program
         QuestPDF.Settings.License = LicenseType.Community;
         var builder = WebApplication.CreateBuilder(args);
 
+       
+
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
+
 
         builder.Services.AddSwaggerGen(c =>
         {
@@ -38,19 +47,20 @@ internal class Program
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
                 {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    new string[] {}
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
                 }
+            },
+            new string[] {}
+        }
             });
         });
+
 
         // ✅ ADD CORS
         builder.Services.AddCors(options =>
@@ -76,7 +86,6 @@ internal class Program
                 connectionString,
                 ServerVersion.AutoDetect(connectionString)
             ));
-
         Console.WriteLine("JWT KEY = " + builder.Configuration["Jwt:Key"]);
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -95,18 +104,21 @@ internal class Program
                 };
             });
 
+
         builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
         builder.Services.AddScoped<IPatientService, PatientService>();
         builder.Services.AddScoped<IPatientRepository, PatientRepository>();
         builder.Services.AddScoped<IOtpService, OtpService>();
 
-        // ✅ ADDED THESE TWO LINES
-        builder.Services.AddScoped<ILabTechnicianRepository, LabTechnicianRepository>();
-        builder.Services.AddScoped<ILabTechnicianService, LabTechnicianService>();
-        // -----------------------
-
+        //builder.Services.AddHttpClient<ISmsService, TwilioSmsService>();
         builder.Services.AddScoped<ISmsService, TwilioSmsService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
+        builder.Services.AddScoped<ILabTechnicianRepository, LabTechnicianRepository>();
+        builder.Services.AddScoped<ILabTechnicianService, LabTechnicianService>();
+
+
+
+
 
         var app = builder.Build();
 
@@ -127,6 +139,8 @@ internal class Program
         app.UseAuthorization();
 
         app.MapControllers();
+       
+
 
         app.Run();
     }

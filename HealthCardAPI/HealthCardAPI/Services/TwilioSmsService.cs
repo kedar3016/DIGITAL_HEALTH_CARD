@@ -19,13 +19,23 @@ namespace HealthCardAPI.Services
             var authToken = _config["Twilio:AuthToken"];
             var from = _config["Twilio:FromPhoneNumber"];
 
-            TwilioClient.Init(accountSid, authToken);
+            try 
+            {
+                TwilioClient.Init(accountSid, authToken);
 
-            await MessageResource.CreateAsync(
-                body: $"Your AarogyaCard OTP is {otp}. Valid for 5 minutes.",
-                from: new Twilio.Types.PhoneNumber(from),
-                to: new Twilio.Types.PhoneNumber($"+91{mobile}") // India number
-            );
+                await MessageResource.CreateAsync(
+                    body: $"Your AarogyaCard OTP is {otp}. Valid for 5 minutes.",
+                    from: new Twilio.Types.PhoneNumber(from),
+                    to: new Twilio.Types.PhoneNumber($"+91{mobile}")
+                );
+                Console.WriteLine($"✅ SMS Sent to {mobile}: {otp}");
+            }
+            catch (Exception ex)
+            {
+                // Fallback for development/invalid credentials
+                Console.WriteLine($"⚠️ SMS Failed: {ex.Message}");
+                Console.WriteLine($"🔢 SIMULATED OTP for {mobile}: {otp}");
+            }
         }
     }
 }

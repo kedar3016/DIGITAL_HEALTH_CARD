@@ -47,54 +47,41 @@ namespace HealthCardAPI.Controllers
                 return NotFound("Doctor not found");
 
             doctor.IsVerified = true;
-            doctor.Password = "doctor@123"; // default password
+            doctor.Password = "doctor@123"; // default password (tell doctor to change later)
 
             await _context.SaveChangesAsync();
 
             return Ok("Doctor verified. Login credentials activated.");
         }
 
-        // 🔍 VIEW PENDING LAB TECHNICIANS
-        [HttpGet("pending-lab-technicians")]
-        public IActionResult GetPendingLabTechnicians()
+        // 🔍 VIEW PENDING LABS
+        [HttpGet("pending-labs")]
+        public async Task<IActionResult> GetPendingLabs()
         {
-            var technicians = _context.LabTechnicians
-                .Where(lt => !lt.IsActive) // Fetching technicians where IsActive is false
-                .Select(lt => new
-                {
-                    lt.Id,
-                    lt.TechnicianName,
-                    lt.LabName,
-                    lt.LabAddress,
-                    lt.PhoneNumber,
-                    lt.Email
-                })
-                .ToList();
+            var labs = await _context.LabTechnicians
+                .Where(l => !l.IsActive)
+                .ToListAsync();
 
-            return Ok(technicians);
+            return Ok(labs);
         }
 
-        // ✅ VERIFY LAB TECHNICIAN
-        [HttpPost("verify-lab-technician/{techId}")]
-        public async Task<IActionResult> VerifyLabTechnician(int techId)
+        // ✅ VERIFY LAB
+        [HttpPost("verify-lab/{labId}")]
+        public async Task<IActionResult> VerifyLab(int labId)
         {
-            var tech = await _context.LabTechnicians.FindAsync(techId);
+            var lab = await _context.LabTechnicians.FindAsync(labId);
 
-            if (tech == null)
+            if (lab == null)
                 return NotFound("Lab Technician not found");
 
-            tech.IsActive = true;
-            // Optional: Set a default password if they didn't set one during registration
-            if (string.IsNullOrEmpty(tech.Password))
-            {
-                tech.Password = "labtech@123";
-            }
-
+            lab.IsActive = true;
             await _context.SaveChangesAsync();
 
-            return Ok("Lab technician verified. Account activated.");
+            return Ok("Lab Technician verified and activated.");
         }
 
+
+        [Authorize(Roles = "HospitalAdmin")]
         [HttpPost("register-lab-technician")]
         public async Task<IActionResult> RegisterLabTechnician(RegisterLabTechnicianDto dto)
         {
@@ -114,5 +101,7 @@ namespace HealthCardAPI.Controllers
 
             return Ok("Lab technician registered successfully");
         }
+
+
     }
 }

@@ -32,7 +32,26 @@ namespace HealthCardAPI.Controllers
         [HttpGet("{aadhaar}")]
         public IActionResult GetByAadhaar(long aadhaar)
         {
-            var patient = _service.GetByAadhaar(aadhaar);
+            var patient = _service.GetAllPatients()
+                .FirstOrDefault(p => p.AadhaarNumber == aadhaar);
+
+            if (patient == null)
+                return NotFound();
+
+            return Ok(patient);
+        }
+
+        // 👤 GET LOGGED-IN PATIENT PROFILE
+        [Authorize(Roles = "Patient")]
+        [HttpGet("me")]
+        public IActionResult GetProfile()
+        {
+            var patientIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (patientIdClaim == null) return Unauthorized();
+
+            int patientId = int.Parse(patientIdClaim.Value);
+
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientId);
 
             if (patient == null)
                 return NotFound("Patient not found");
@@ -47,46 +66,15 @@ namespace HealthCardAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            try
-            {
-                var patient = _service.RegisterPatient(dto);
-
-                return Ok(new
-                {
-                    patient.Id,
-                    patient.HealthCardNumber,
-                    Message = "Patient registered successfully"
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-        }
-        [Authorize(Roles = "Patient")]
-        [HttpGet("profile")]
-        public async Task<IActionResult> GetProfile()
-        {
-            var patientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var patient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.Id == patientId);
-
-            if (patient == null)
-                return NotFound("Patient not found");
+            var patient = _service.RegisterPatient(dto);
 
             return Ok(new
             {
-                patient.Name,
-                patient.Gender,
-                patient.BloodGroup,
-                patient.PhoneNumber,
+                patient.Id,
                 patient.HealthCardNumber,
-                patient.DateOfBirth,
-                patient.Address
+                Message = "Patient registered successfully"
             });
         }
-
         [Authorize]
         [HttpGet("health-card")]
         public IActionResult DownloadHealthCard()
