@@ -1,6 +1,7 @@
 ﻿using HealthCardAPI.Data;
 using HealthCardAPI.DTOs;
 using HealthCardAPI.Model;
+using HealthCardAPI.Models;
 using HealthCardAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -146,6 +147,31 @@ public async Task<IActionResult> DoctorLogin(DoctorLoginDto dto)
                 tech.TechnicianName,
                 tech.LabName
             });
+        }
+
+        // 🟢 LAB TECHNICIAN REGISTRATION
+        [HttpPost("lab-tech/register")]
+        public async Task<IActionResult> RegisterLabTech(RegisterLabTechnicianDto dto)
+        {
+            // Check if email already exists
+            if (await _context.LabTechnicians.AnyAsync(l => l.Email == dto.Email))
+                return BadRequest("Email already registered");
+
+            var lab = new LabTechnician
+            {
+                LabName = dto.LabName,
+                LabAddress = dto.LabAddress ?? "Not Provided", // Handle potential nulls
+                TechnicianName = dto.TechnicianName, // DTO calls it Name or TechnicianName? Checking DTO... UI sends "name", DTO "TechnicianName"
+                PhoneNumber = dto.PhoneNumber,
+                Email = dto.Email,
+                Password = dto.Password,
+                IsActive = false // 🔒 Pending Admin Approval
+            };
+
+            _context.LabTechnicians.Add(lab);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Registration successful! Awaiting Hospital Admin approval." });
         }
 
 

@@ -113,6 +113,8 @@ internal class Program
         //builder.Services.AddHttpClient<ISmsService, TwilioSmsService>();
         builder.Services.AddScoped<ISmsService, TwilioSmsService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
+        builder.Services.AddScoped<ILabTechnicianRepository, LabTechnicianRepository>();
+        builder.Services.AddScoped<ILabTechnicianService, LabTechnicianService>();
 
 
 

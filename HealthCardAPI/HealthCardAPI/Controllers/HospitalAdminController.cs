@@ -53,7 +53,33 @@ namespace HealthCardAPI.Controllers
 
             return Ok("Doctor verified. Login credentials activated.");
         }
- 
+
+        // 🔍 VIEW PENDING LABS
+        [HttpGet("pending-labs")]
+        public async Task<IActionResult> GetPendingLabs()
+        {
+            var labs = await _context.LabTechnicians
+                .Where(l => !l.IsActive)
+                .ToListAsync();
+
+            return Ok(labs);
+        }
+
+        // ✅ VERIFY LAB
+        [HttpPost("verify-lab/{labId}")]
+        public async Task<IActionResult> VerifyLab(int labId)
+        {
+            var lab = await _context.LabTechnicians.FindAsync(labId);
+
+            if (lab == null)
+                return NotFound("Lab Technician not found");
+
+            lab.IsActive = true;
+            await _context.SaveChangesAsync();
+
+            return Ok("Lab Technician verified and activated.");
+        }
+
 
         [Authorize(Roles = "HospitalAdmin")]
         [HttpPost("register-lab-technician")]

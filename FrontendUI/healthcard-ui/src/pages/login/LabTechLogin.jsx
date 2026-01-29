@@ -26,6 +26,8 @@ export default function LabTechLogin() {
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", "LabTechnician");
+      localStorage.setItem("technicianName", res.data.technicianName); // Note: Backend returns PascalCase or camelCase? JSON serializer default is camelCase usually.
+      localStorage.setItem("labName", res.data.labName);
       localStorage.removeItem("session_warning_shown");
 
       navigate("/lab/dashboard");

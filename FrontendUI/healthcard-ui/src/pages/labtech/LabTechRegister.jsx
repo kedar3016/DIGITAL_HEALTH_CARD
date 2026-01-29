@@ -45,13 +45,13 @@ export default function LabTechRegister() {
 
     try {
       await api.post("/api/auth/lab-tech/register", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        labName: formData.labName,
-        licenseNumber: formData.licenseNumber,
-        phone: formData.phone,
-        experience: formData.experience
+        TechnicianName: formData.name, // Mapped from name
+        Email: formData.email,
+        Password: formData.password,
+        LabName: formData.labName,
+        LabAddress: formData.licenseNumber, // Mapping License to Address for now
+        PhoneNumber: formData.phone,
+        //experience: formData.experience // Not needed/supported
       });
 
       // Show success message and redirect to login

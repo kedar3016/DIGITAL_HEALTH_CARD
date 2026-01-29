@@ -41,6 +41,24 @@ namespace HealthCardAPI.Controllers
             return Ok(patient);
         }
 
+        // 👤 GET LOGGED-IN PATIENT PROFILE
+        [Authorize(Roles = "Patient")]
+        [HttpGet("me")]
+        public IActionResult GetProfile()
+        {
+            var patientIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (patientIdClaim == null) return Unauthorized();
+
+            int patientId = int.Parse(patientIdClaim.Value);
+
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientId);
+
+            if (patient == null)
+                return NotFound("Patient not found");
+
+            return Ok(patient);
+        }
+
         // ✅ REGISTER PATIENT
         [HttpPost("register")]
         public IActionResult Register(RegisterPatientDto dto)

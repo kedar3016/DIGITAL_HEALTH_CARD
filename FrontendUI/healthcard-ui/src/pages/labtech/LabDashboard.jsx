@@ -39,14 +39,14 @@ export default function LabDashboard() {
     }
 
     const formData = new FormData();
-    formData.append("report", file);
-    formData.append("patientId", patient.id);
+    formData.append("file", file);
+    //formData.append("patientId", patient.id); // Not needed in body, passes in URL
 
     setLoading(true);
     setMessage("");
 
     try {
-      await api.post("/api/lab/reports/upload", formData, {
+      await api.post(`/api/reports/upload/${patient.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -97,14 +97,14 @@ export default function LabDashboard() {
             fontWeight: "700",
             margin: "0 0 8px 0"
           }}>
-            🧪 Lab Technician Dashboard
+            🧪 {localStorage.getItem("labName") || "Lab"} Dashboard
           </h1>
           <p style={{
             color: "#718096",
             fontSize: "16px",
             margin: "0"
           }}>
-            Manage patient reports and upload test results
+            Welcome, {localStorage.getItem("technicianName") || "Technician"} | Manage patient reports
           </p>
         </div>
 
@@ -181,7 +181,7 @@ export default function LabDashboard() {
           <div style={{ display: "flex", gap: "12px", marginBottom: "16px" }}>
             <input
               type="text"
-              placeholder="Enter Patient ID"
+              placeholder="Enter Patient Aadhaar Number"
               value={searchId}
               onChange={(e) => setSearchId(e.target.value)}
               style={{

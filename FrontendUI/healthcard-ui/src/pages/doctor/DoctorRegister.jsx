@@ -45,7 +45,7 @@ export default function DoctorRegister() {
     setError("");
 
     try {
-      await api.post("/api/auth/doctor/register", {
+      await api.post("/api/doctors/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
