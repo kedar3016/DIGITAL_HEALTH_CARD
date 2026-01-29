@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
-  FaSearch,
-  FaCheckCircle,
-  FaUserMd,
+  FaMagnifyingGlass,
+  FaCircleCheck,
+  FaUserDoctor,
   FaFlask,
-  FaSignOutAlt,
+  FaArrowRightFromBracket,
   FaBars,
-} from "react-icons/fa";
+} from "react-icons/fa6";
 
 export default function AdminDashboard() {
   const [doctorId, setDoctorId] = useState("");
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
           style={styles.logoutBtn}
           onClick={() => setShowLogoutPopup(true)}
         >
-          <FaSignOutAlt /> Logout
+          <FaArrowRightFromBracket /> Logout
         </button>
       </div>
 
@@ -73,7 +73,7 @@ export default function AdminDashboard() {
           {/* SUCCESS MESSAGE */}
           {message && (
             <div style={styles.success}>
-              <FaCheckCircle /> {message}
+              <FaCircleCheck /> {message}
             </div>
           )}
 
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
                 </div>
 
                 <div style={styles.infoBox}>
-                  <FaUserMd size={36} />
+                  <FaUserDoctor size={36} />
                   <div>
                     <strong>Dr. Amit Sharma</strong>
                     <p>Specialization: Neurologist</p>

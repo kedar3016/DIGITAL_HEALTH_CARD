@@ -9,7 +9,10 @@ export default function LabTechRegister() {
     password: "",
     confirmPassword: "",
     labName: "",
+
     phoneNumber: "",
+
+
     labAddress: ""
   });
   const [loading, setLoading] = useState(false);
@@ -26,7 +29,9 @@ export default function LabTechRegister() {
 
   const register = async () => {
     // Validation
-    if (!formData.technicianName || !formData.email || !formData.password || !formData.labName) {
+
+    if (!formData.name || !formData.email || !formData.password || !formData.labName) {
+
       setError("Please fill in all required fields");
       return;
     }

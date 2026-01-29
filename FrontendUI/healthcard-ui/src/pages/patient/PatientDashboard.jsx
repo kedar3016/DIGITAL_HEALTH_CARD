@@ -4,9 +4,14 @@ import {
   FaIdCard,
   FaFileMedical,
   FaDownload,
+<<<<<<< HEAD
+  FaArrowRightFromBracket,
+} from "react-icons/fa6";
+=======
   FaSignOutAlt,
 } from "react-icons/fa";
 import ConfirmationModal from "../../components/ConfirmationModal";
+>>>>>>> e98c8329d6a8bc0893e1bbc829545c3d39fc05ae
 
 export default function PatientDashboard() {
   const [patient, setPatient] = useState(null);
@@ -219,6 +224,12 @@ export default function PatientDashboard() {
             </div>
           )}
         </div>
+<<<<<<< HEAD
+        <button style={styles.logoutBtn}>
+          <FaArrowRightFromBracket /> Logout
+        </button>
+=======
+>>>>>>> e98c8329d6a8bc0893e1bbc829545c3d39fc05ae
       </div>
 
       {/* MAIN CONTENT */}
