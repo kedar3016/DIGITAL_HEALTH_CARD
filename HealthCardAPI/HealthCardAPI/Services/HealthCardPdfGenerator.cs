@@ -30,7 +30,7 @@ namespace HealthCardAPI.Services
                                 row.RelativeItem().Column(c =>
                                 {
                                     c.Item().Text("SMART HEALTH CARD").FontSize(18).Bold().FontColor(Colors.White);
-                                    c.Item().Text("Digital Health Identity").FontSize(10).FontColor(Colors.White.Medium);
+                                    c.Item().Text("Digital Health Identity").FontSize(10).FontColor(Colors.White);
                                 });
                                 // Placeholder for Logo/Icon
                                 row.ConstantItem(40).AlignRight().Text("🏥").FontSize(24);
@@ -52,9 +52,18 @@ namespace HealthCardAPI.Services
                                 {
                                     details.Spacing(5);
 
-                                    details.Item().Text(t => { t.Span("Name: ").Bold().Color(Colors.Grey.Darken2); t.Span(patient.Name).SemiBold().FontSize(14); });
-                                    details.Item().Text(t => { t.Span("Card No: ").Bold().Color(Colors.Grey.Darken2); t.Span(patient.HealthCardNumber).FontColor("#f5576c"); });
-                                    
+                                    details.Item().Text(t =>
+                                    {
+                                        t.Span("Name: ").Bold().FontColor(Colors.Grey.Darken2);
+                                        t.Span(patient.Name).SemiBold().FontSize(14);
+                                    });
+
+                                    details.Item().Text(t =>
+                                    {
+                                        t.Span("Card No: ").Bold().FontColor(Colors.Grey.Darken2);
+                                        t.Span(patient.HealthCardNumber).FontColor("#f5576c");
+                                    });
+
                                     details.Item().PaddingTop(5).LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
                                     details.Item().PaddingTop(5);
 

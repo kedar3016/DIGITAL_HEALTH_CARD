@@ -4,14 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function LabTechRegister() {
   const [formData, setFormData] = useState({
-    name: "",
+    technicianName: "",
     email: "",
     password: "",
     confirmPassword: "",
     labName: "",
-    phone: "",
-    labAddress: "",
-    isActive: false
+    phoneNumber: "",
+    labAddress: ""
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -27,7 +26,7 @@ export default function LabTechRegister() {
 
   const register = async () => {
     // Validation
-    if (!formData.name || !formData.email || !formData.password || !formData.labName || !formData.isActive) {
+    if (!formData.technicianName || !formData.email || !formData.password || !formData.labName) {
       setError("Please fill in all required fields");
       return;
     }
@@ -46,15 +45,13 @@ export default function LabTechRegister() {
     setError("");
 
     try {
-      await api.post("/api/auth/lab-tech/register", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
+      await api.post("/api/LabTechnicians/register", {
         labName: formData.labName,
-        phone: formData.phone,
         labAddress: formData.labAddress,
-        isActive: formData.isActive,
-        experience: formData.experience
+        technicianName: formData.technicianName,
+        phoneNumber: Number(formData.phoneNumber), // Convert to number for backend
+        email: formData.email,
+        password: formData.password
       });
 
       // Show success message and redirect to login
@@ -156,9 +153,9 @@ export default function LabTechRegister() {
             </label>
             <input
               type="text"
-              name="name"
+              name="technicianName"
               placeholder="Enter your full name"
-              value={formData.name}
+              value={formData.technicianName}
               onChange={handleChange}
               disabled={loading}
               style={{
@@ -353,9 +350,9 @@ export default function LabTechRegister() {
             </label>
             <input
               type="tel"
-              name="phone"
+              name="phoneNumber"
               placeholder="Enter your phone number"
-              value={formData.phone}
+              value={formData.phoneNumber}
               onChange={handleChange}
               disabled={loading}
               style={{
@@ -418,31 +415,7 @@ export default function LabTechRegister() {
             />
           </div>
 
-          {/* Is Active */}
-          <div style={{ marginBottom: "24px" }}>
-            <label style={{
-              display: "flex",
-              alignItems: "center",
-              color: "#4a5568",
-              fontSize: "14px",
-              fontWeight: "600",
-              marginBottom: "6px"
-            }}>
-              <input
-                type="checkbox"
-                name="isActive"
-                checked={formData.isActive}
-                onChange={handleChange}
-                disabled={loading}
-                style={{
-                  marginRight: "8px",
-                  width: "16px",
-                  height: "16px"
-                }}
-              />
-              Is Active *
-            </label>
-          </div>
+
 
           <button
             onClick={register}

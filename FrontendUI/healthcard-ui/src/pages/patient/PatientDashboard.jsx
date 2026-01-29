@@ -367,16 +367,12 @@ export default function PatientDashboard() {
 
 /* ===================== INLINE STYLES ===================== */
 
-/* ===================== INLINE STYLES ===================== */
-
-/* ===================== INLINE STYLES ===================== */
-
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "#eef2f6", // Light Blue-Gray background
+    background: "#ffffff", // White background
     fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    color: "#334155",
+    color: "#334155", // Dark text for contrast on white
   },
 
   header: {
@@ -393,8 +389,6 @@ const styles = {
     zIndex: 100, // Ensure header is above everything
   },
 
-  // Deleted logoutBtn style since it's moved to dropdown
-
   // Dropdown Styles
   dropdownMenu: {
     position: "absolute",
@@ -406,7 +400,7 @@ const styles = {
     width: "220px",
     overflow: "hidden",
     zIndex: 101, // Above header
-    animation: "slideDown 0.3s ease-out", // Changed to slideDown for better effect
+    animation: "slideDown 0.3s ease-out",
     transformOrigin: "top right",
   },
   dropdownHeader: {
@@ -448,7 +442,7 @@ const styles = {
   grid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: "30px", // Increased gap
+    gap: "30px",
     padding: "30px 40px",
     maxWidth: "1200px",
     margin: "0 auto",
@@ -456,10 +450,11 @@ const styles = {
 
   card: {
     background: "#fff",
-    borderRadius: "12px", // Slightly less rounded than glassmorphism
+    borderRadius: "12px",
     padding: "30px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.05)", // Clean soft shadow
+    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
     border: "none",
+    color: "#333", // Reset text color for white card
   },
 
   cardTitle: {
@@ -474,7 +469,6 @@ const styles = {
 
   primaryBtn: {
     width: "100%",
-    // Purple-Blue Gradient Button (Matches Header)
     background: "linear-gradient(90deg, #5654ff 0%, #764ba2 100%)",
     color: "#fff",
     border: "none",
@@ -488,7 +482,7 @@ const styles = {
     gap: "10px",
     alignItems: "center",
     marginTop: "20px",
-    boxShadow: "0 4px 12px rgba(86, 84, 255, 0.4)", // Purple shadow
+    boxShadow: "0 4px 12px rgba(86, 84, 255, 0.4)",
   },
 
   reportItem: {
@@ -504,8 +498,8 @@ const styles = {
 
   downloadBtn: {
     background: "#fff",
-    border: "1px solid #5654ff", // Purple Border
-    color: "#5654ff", // Purple Text
+    border: "1px solid #5654ff",
+    color: "#5654ff",
     padding: "8px 16px",
     borderRadius: "6px",
     cursor: "pointer",
@@ -522,12 +516,11 @@ const styles = {
   digitalCard: {
     width: "100%",
     maxWidth: "380px",
-    // Calm Bluish Gradient with Reduced Opacity (Reserved as Requested)
     background: "linear-gradient(135deg, rgba(33, 147, 176, 0.85) 0%, rgba(109, 213, 237, 0.85) 100%)",
-    backdropFilter: "blur(5px)", // Glass effect
+    backdropFilter: "blur(5px)",
     borderRadius: "16px",
     color: "white",
-    boxShadow: "0 10px 25px rgba(33, 147, 176, 0.25)", // Softer shadow
+    boxShadow: "0 10px 25px rgba(33, 147, 176, 0.25)",
     overflow: "hidden",
     position: "relative",
   },
