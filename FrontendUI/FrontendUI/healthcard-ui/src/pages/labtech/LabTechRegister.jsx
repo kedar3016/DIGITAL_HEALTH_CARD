@@ -50,7 +50,7 @@ export default function LabTechRegister() {
     setError("");
 
     try {
-      await api.post("/api/LabTechnicians/register", {
+      await api.post("/api/auth/lab-tech/register", {
         labName: formData.labName,
         labAddress: formData.labAddress,
         technicianName: formData.technicianName,
