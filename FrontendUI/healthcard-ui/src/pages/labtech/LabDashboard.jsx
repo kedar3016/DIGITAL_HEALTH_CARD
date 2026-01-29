@@ -11,7 +11,7 @@ export default function LabDashboard() {
 
   const searchPatient = async () => {
     if (!searchId.trim()) {
-      setMessage("Please enter a patient ID");
+      setMessage("Please enter a Health Card Number");
       return;
     }
 
@@ -19,7 +19,8 @@ export default function LabDashboard() {
     setMessage("");
 
     try {
-      const res = await api.get(`/api/patients/${searchId}`);
+      // Correct Endpoint for Lab Tech Search
+      const res = await api.get(`/api/Patients/readonly/${searchId}`);
       setPatient(res.data);
       setMessage("Patient found successfully");
     } catch (err) {
@@ -38,14 +39,14 @@ export default function LabDashboard() {
     }
 
     const formData = new FormData();
-    formData.append("report", file);
-    formData.append("patientId", patient.id);
+    formData.append("File", file); // Key matches UploadReportDto property 'File'
 
     setLoading(true);
     setMessage("");
 
     try {
-      await api.post("/api/lab/reports/upload", formData, {
+      // Correct Endpoint for Lab Tech Upload
+      await api.post(`/api/reports/upload/${patient.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -167,7 +168,7 @@ export default function LabDashboard() {
           <div style={{ display: "flex", gap: "12px", marginBottom: "16px" }}>
             <input
               type="text"
-              placeholder="Enter Patient ID"
+              placeholder="Enter Health Card Number"
               value={searchId}
               onChange={(e) => setSearchId(e.target.value)}
               style={{
@@ -201,14 +202,31 @@ export default function LabDashboard() {
           {patient && (
             <div style={{
               background: "white",
-              padding: "16px",
+              padding: "20px",
               borderRadius: "8px",
-              border: "1px solid #e2e8f0"
+              border: "1px solid #e2e8f0",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center"
             }}>
-              <h4 style={{ margin: "0 0 8px 0", color: "#2d3748" }}>Patient Details</h4>
-              <p style={{ margin: "4px 0", color: "#4a5568" }}><strong>Name:</strong> {patient.name}</p>
-              <p style={{ margin: "4px 0", color: "#4a5568" }}><strong>Email:</strong> {patient.email}</p>
-              <p style={{ margin: "4px 0", color: "#4a5568" }}><strong>Phone:</strong> {patient.phone}</p>
+              <div>
+                <h4 style={{ margin: "0 0 10px 0", color: "#2d3748", fontSize: "18px" }}>Patient Details</h4>
+                <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "8px 20px", alignItems: "center" }}>
+                  <span style={{ color: "#718096", fontSize: "14px" }}>Name:</span>
+                  <span style={{ color: "#2d3748", fontWeight: "600" }}>{patient.name}</span>
+
+                  <span style={{ color: "#718096", fontSize: "14px" }}>Age:</span>
+                  <span style={{ color: "#2d3748", fontWeight: "600" }}>
+                    {patient.dateOfBirth ? new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear() : "N/A"} Years
+                  </span>
+
+                  <span style={{ color: "#718096", fontSize: "14px" }}>Gender:</span>
+                  <span style={{ color: "#2d3748", fontWeight: "600" }}>{patient.gender}</span>
+
+                  <span style={{ color: "#718096", fontSize: "14px" }}>Blood Group:</span>
+                  <span style={{ color: "#2d3748", fontWeight: "600" }}>{patient.bloodGroup || "N/A"}</span>
+                </div>
+              </div>
             </div>
           )}
         </div>

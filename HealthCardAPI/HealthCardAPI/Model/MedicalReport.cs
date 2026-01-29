@@ -11,7 +11,7 @@
         public string FilePath { get; set; }
         public DateTime UploadedAt { get; set; }
 
-        
+        public string HealthCardId { get; set; }
         public string UploadedByRole { get; set; }   // "Doctor", "Lab", "Patient"
         public int? UploadedById { get; set; }       // DoctorId / LabTechnicianId / null
     }

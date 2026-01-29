@@ -10,7 +10,7 @@ namespace HealthCardAPI.DTOs
         public int PatientId { get; set; }
         public int DoctorId { get; set; }
         public int LabTechId { get; set; }
-
+        public string HealthCardId { get; set; }
         public IFormFile ReportFile { get; set; }
     }
 }

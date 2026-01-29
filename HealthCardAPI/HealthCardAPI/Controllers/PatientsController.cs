@@ -110,8 +110,8 @@ namespace HealthCardAPI.Controllers
             return File(pdfBytes, "application/pdf", "SmartHealthCard.pdf");
         }
 
-        // 🧑‍🔬 LAB TECH – READ ONLY PATIENT DATA
-        [Authorize(Roles = "LabTechnician")]
+        // 🧑‍🔬 LAB TECH & DOCTOR – READ ONLY PATIENT DATA
+        [Authorize(Roles = "LabTechnician,Doctor")]
         [HttpGet("readonly/{healthCardId}")]
         public IActionResult GetPatientReadonly(string healthCardId)
         {
