@@ -1,0 +1,412 @@
+/* PatientDashboard.css */
+
+.dashboard-page {
+  min-height: 100vh;
+  background: #ffffff;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #334155;
+}
+
+.dashboard-header {
+  background: linear-gradient(90deg, #5654ff 0%, #764ba2 100%);
+  color: #fff;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(86, 84, 255, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5654ff;
+  font-size: 22px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo-text-container h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.logo-subtitle {
+  font-size: 12px;
+  opacity: 0.9;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+
+/* Dropdown Styles */
+.profile-dropdown-container {
+  position: relative;
+}
+
+.profile-icon-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 120%;
+  right: 0 !important;
+  left: auto !important;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  width: 220px;
+  overflow: hidden;
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
+  transform-origin: top right;
+  border: 1px solid #e2e8f0;
+}
+
+.dropdown-header {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8fafc;
+}
+
+.dropdown-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+}
+
+.user-role {
+  font-size: 11px;
+  color: #888;
+}
+
+
+.dropdown-divider {
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 12px 15px;
+  background: white;
+  border: none;
+  color: #ef4444;
+  /* Red for logout */
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 30px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: none;
+  color: #333;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.loading-text {
+  color: #777;
+  text-align: center;
+}
+
+.error-text {
+  color: red;
+  text-align: center;
+}
+
+.primary-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #5654ff 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(86, 84, 255, 0.4);
+}
+
+.reports-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.reports-title-wrapper {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.upload-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.notification-msg {
+  font-size: 13px;
+  font-weight: bold;
+  animation: fadeIn 0.5s;
+}
+
+.notification-msg.success {
+  color: green;
+}
+
+.notification-msg.error {
+  color: red;
+}
+
+
+.upload-btn {
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.upload-btn.active {
+  background: #48bb78;
+}
+
+.upload-btn.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+
+.no-reports {
+  color: #777;
+}
+
+
+.report-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.report-date {
+  font-size: 13px;
+  color: #666;
+}
+
+.download-btn-small {
+  background: #fff;
+  border: 1px solid #5654ff;
+  color: #5654ff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* DIGITAL HEALTH CARD STYLES */
+.health-card-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.digital-card {
+  width: 100%;
+  max-width: 380px;
+  background: linear-gradient(135deg, rgba(33, 147, 176, 0.851) 0%, rgba(109, 213, 237, 0.85) 100%);
+  backdrop-filter: blur(5px);
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 10px 25px rgba(33, 147, 176, 0.25);
+  overflow: hidden;
+  position: relative;
+}
+
+.health-card-header {
+  padding: 15px 24px;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title-text {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.card-subtitle-text {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+
+.health-card-body {
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.card-photo-placeholder {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: #cbd5e0;
+}
+
+.card-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.detail-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.value-highlight {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.value-small {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.card-footer-row {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
