@@ -10,24 +10,49 @@ export default function DoctorRegister() {
     confirmPassword: "",
     specialization: "",
     licenseNumber: "",
-    phone: "",
-    experience: ""
+    phone: ""
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    if (name === "phone") {
+      // Allow only numbers and max 10 digits
+      const numericValue = value.replace(/\D/g, "").slice(0, 10);
+      setFormData({ ...formData, [name]: numericValue });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const register = async () => {
     // Validation
-    if (!formData.name || !formData.email || !formData.password || !formData.specialization || !formData.licenseNumber) {
-      setError("Please fill in all required fields");
+    if (!formData.name.trim()) {
+      setError("Full Name is required");
+      return;
+    }
+    if (!formData.email.trim()) {
+      setError("Email Address is required");
+      return;
+    }
+    if (!formData.password) {
+      setError("Password is required");
+      return;
+    }
+    if (!formData.specialization.trim()) {
+      setError("Specialization is required");
+      return;
+    }
+    if (!formData.licenseNumber.trim()) {
+      setError("Medical License Number is required");
+      return;
+    }
+
+    if (!formData.phone || formData.phone.length !== 10) {
+      setError("Phone number must be exactly 10 digits");
       return;
     }
 
@@ -46,14 +71,14 @@ export default function DoctorRegister() {
     setError("");
 
     try {
-      await api.post("/api/auth/doctor/register", {
+      await api.post("/api/doctors/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
         specialization: formData.specialization,
         licenseNumber: formData.licenseNumber,
-        phone: formData.phone,
-        experience: formData.experience
+        phoneNumber: Number(formData.phone),
+        hospitalId: 0
       });
 
       // Show success message and redirect to login
@@ -426,45 +451,7 @@ export default function DoctorRegister() {
             />
           </div>
 
-          {/* Experience */}
-          <div style={{ marginBottom: "24px" }}>
-            <label style={{
-              display: "block",
-              color: "#4a5568",
-              fontSize: "14px",
-              fontWeight: "600",
-              marginBottom: "6px"
-            }}>
-              Years of Experience
-            </label>
-            <input
-              type="number"
-              name="experience"
-              placeholder="Enter years of experience"
-              value={formData.experience}
-              onChange={handleChange}
-              disabled={loading}
-              min="0"
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                border: "2px solid #e2e8f0",
-                borderRadius: "8px",
-                fontSize: "16px",
-                transition: "border-color 0.2s, box-shadow 0.2s",
-                outline: "none",
-                boxSizing: "border-box"
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = "#667eea";
-                e.target.style.boxShadow = "0 0 0 3px rgba(102, 126, 234, 0.1)";
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = "#e2e8f0";
-                e.target.style.boxShadow = "none";
-              }}
-            />
-          </div>
+
 
           <button
             onClick={register}

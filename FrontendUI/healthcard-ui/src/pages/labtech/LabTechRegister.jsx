@@ -45,9 +45,20 @@ export default function LabTechRegister() {
       return;
     }
 
-    if (!formData.name || !formData.email || !formData.password || !formData.labName) {
-
-      setError("Please fill in all required fields");
+    if (!formData.technicianName.trim()) {
+      setError("Technician Name is required");
+      return;
+    }
+    if (!formData.email.trim()) {
+      setError("Email Address is required");
+      return;
+    }
+    if (!formData.password) {
+      setError("Password is required");
+      return;
+    }
+    if (!formData.labName.trim()) {
+      setError("Laboratory Name is required");
       return;
     }
 

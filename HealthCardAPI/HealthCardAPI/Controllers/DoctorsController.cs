@@ -48,6 +48,7 @@ namespace HealthCardAPI.Controllers
                 PhoneNumber = dto.PhoneNumber,
                 Specialization = dto.Specialization,
                 LicenseNumber = dto.LicenseNumber,
+                Password = dto.Password,
                 HospitalId = dto.HospitalId,
                 IsVerified = false
             };
