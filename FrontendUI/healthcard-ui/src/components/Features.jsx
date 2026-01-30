@@ -4,11 +4,11 @@ export default function Features() {
   const features = [
     {
       title: "Digital Health Records",
-      description: "Store and access all your medical history in one secure digital card with blockchain-level security and instant verification.",
+      description: "Store and access all your medical history in one secure digital card with advanced security and instant verification.",
       icon: "📄",
       color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      benefits: ["Lifetime storage", "Instant access", "Blockchain security"],
-      stats: "99.9% Uptime"
+      benefits: ["Lifetime storage", "Instant access", "Advanced security"],
+      stats: "Uptime"
     },
     {
       title: "OTP & Biometric Security",
@@ -16,7 +16,7 @@ export default function Features() {
       icon: "🔐",
       color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
       benefits: ["Aadhaar verified", "Biometric auth", "Zero-trust security"],
-      stats: "Bank-grade Security"
+      stats: "Role BasedSecurity"
     },
     {
       title: "PDF Medical Reports",
@@ -24,23 +24,23 @@ export default function Features() {
       icon: "📋",
       color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
       benefits: ["Universal format", "Instant sharing", "Digital signatures"],
-      stats: "50K+ Reports/month"
+      stats: "Reports"
     },
     {
       title: "Emergency Access",
       description: "Grant emergency access to trusted nominees in critical situations with time-limited permissions and automatic revocation.",
-      icon: "🚑",
+      icon: "🚨",
       color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
       benefits: ["Life-saving access", "Time-limited", "Auto-revocation"],
       stats: "24/7 Emergency Support"
     },
     {
       title: "Doctor Verification",
-      description: "All records are verified by certified medical professionals with digital signatures and tamper-proof blockchain validation.",
+      description: "All records are verified by certified medical professionals with digital signatures and tamper-proof verification.",
       icon: "👨‍⚕️",
       color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
       benefits: ["Certified doctors", "Digital signatures", "Tamper-proof"],
-      stats: "750+ Verified Doctors"
+      stats: "Verified Doctors"
     },
     {
       title: "Lab Integration",
@@ -48,7 +48,7 @@ export default function Features() {
       icon: "🧪",
       color: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
       benefits: ["Real-time results", "Certified labs", "Instant delivery"],
-      stats: "200+ Partner Labs"
+      stats: "Lab Partners"
     }
   ];
 
@@ -141,14 +141,14 @@ export default function Features() {
               overflow: "hidden",
               animation: `fadeInUp 1s ease-out ${0.6 + index * 0.1}s both`
             }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-12px) scale(1.02)";
-              e.target.style.boxShadow = "0 25px 60px rgba(0, 0, 0, 0.15)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0) scale(1)";
-              e.target.style.boxShadow = "0 8px 30px rgba(0, 0, 0, 0.08)";
-            }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = "translateY(-12px) scale(1.02)";
+                e.target.style.boxShadow = "0 25px 60px rgba(0, 0, 0, 0.15)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = "translateY(0) scale(1)";
+                e.target.style.boxShadow = "0 8px 30px rgba(0, 0, 0, 0.08)";
+              }}
             >
               {/* Gradient Background */}
               <div style={{
@@ -192,18 +192,20 @@ export default function Features() {
               </div>
 
               {/* Stats Badge */}
-              <div style={{
-                display: "inline-block",
-                background: "rgba(102, 126, 234, 0.1)",
-                color: "#667eea",
-                padding: "6px 16px",
-                borderRadius: "20px",
-                fontSize: "0.8rem",
-                fontWeight: "700",
-                marginBottom: "20px"
-              }}>
-                {feature.stats}
-              </div>
+              {feature.stats && (
+                <div style={{
+                  display: "inline-block",
+                  background: "rgba(102, 126, 234, 0.1)",
+                  color: "#667eea",
+                  padding: "6px 16px",
+                  borderRadius: "20px",
+                  fontSize: "0.8rem",
+                  fontWeight: "700",
+                  marginBottom: "20px"
+                }}>
+                  {feature.stats}
+                </div>
+              )}
 
               {/* Title */}
               <h3 style={{
@@ -286,50 +288,7 @@ export default function Features() {
             efficient, and innovative healthcare management solutions.
           </p>
 
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "30px",
-            maxWidth: "800px",
-            margin: "0 auto"
-          }}>
-            <div style={{ textAlign: "center" }}>
-              <div style={{
-                fontSize: "2.5rem",
-                fontWeight: "900",
-                marginBottom: "8px",
-                color: "#a8edea"
-              }}>15K+</div>
-              <div style={{ fontSize: "0.9rem", opacity: 0.8 }}>Active Patients</div>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{
-                fontSize: "2.5rem",
-                fontWeight: "900",
-                marginBottom: "8px",
-                color: "#fed6e3"
-              }}>750+</div>
-              <div style={{ fontSize: "0.9rem", opacity: 0.8 }}>Verified Doctors</div>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{
-                fontSize: "2.5rem",
-                fontWeight: "900",
-                marginBottom: "8px",
-                color: "#d299c2"
-              }}>200+</div>
-              <div style={{ fontSize: "0.9rem", opacity: 0.8 }}>Partner Labs</div>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{
-                fontSize: "2.5rem",
-                fontWeight: "900",
-                marginBottom: "8px",
-                color: "#fbbf24"
-              }}>4.9★</div>
-              <div style={{ fontSize: "0.9rem", opacity: 0.8 }}>User Rating</div>
-            </div>
-          </div>
+
         </div>
       </div>
 

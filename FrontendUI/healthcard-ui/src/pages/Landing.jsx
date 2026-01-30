@@ -21,7 +21,7 @@ export default function Landing() {
       <AboutUs />
       <Roles />
       <HowItWorks />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <ContactUs />
       <Footer />
       {/* Gemini AI Studio API key is now set */}

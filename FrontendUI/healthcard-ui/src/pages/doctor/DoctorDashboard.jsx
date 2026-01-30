@@ -28,6 +28,10 @@ export default function DoctorDashboard() {
   const [uploadMessage, setUploadMessage] = useState("");
   const navigate = useNavigate();
 
+  /* New State for Access */
+  const [accessStatus, setAccessStatus] = useState("NOT_REQUESTED"); // NOT_REQUESTED, PENDING, APPROVED, DENIED
+  const [requestLoading, setRequestLoading] = useState(false);
+
   useEffect(() => {
     const fetchDoctorProfile = async () => {
       try {
@@ -53,29 +57,56 @@ export default function DoctorDashboard() {
     setError("");
     setSearchedPatient(null);
     setPatientReports([]);
+    setAccessStatus("NOT_REQUESTED"); // Reset status
 
     try {
       // 1. Search Patient
       const patientRes = await api.get(`/api/Patients/readonly/${searchId}`);
       setSearchedPatient(patientRes.data);
 
-      // 2. Fetch Reports for this patient
-      const reportsRes = await api.get(`/api/reports?healthCardId=${searchId}`);
-      setPatientReports(reportsRes.data.map(r => ({
-        id: r.id,
-        name: r.reportName,
-        date: new Date(r.uploadedAt).toLocaleDateString("en-GB", {
-          day: "numeric", month: "short", year: "numeric"
-        }),
-        filePath: r.filePath,
-        uploadedBy: r.uploadedBy
-      })));
+      // 2. Check Access Status
+      try {
+        const accessRes = await api.get(`/api/access/status/${patientRes.data.id}`);
+        setAccessStatus(accessRes.data.status); // PENDING, APPROVED, DENIED
+
+        if (accessRes.data.status === "APPROVED") {
+          // 3. Fetch Reports for this patient ONLY if APPROVED
+          const reportsRes = await api.get(`/api/reports?healthCardId=${searchId}`);
+          setPatientReports(reportsRes.data.map(r => ({
+            id: r.id,
+            name: r.reportName,
+            date: new Date(r.uploadedAt).toLocaleDateString("en-GB", {
+              day: "numeric", month: "short", year: "numeric"
+            }),
+            filePath: r.filePath,
+            uploadedBy: r.uploadedBy
+          })));
+        }
+      } catch (accessErr) {
+        console.error("Failed to check access", accessErr);
+        // If 404 or other error, assume NOT_REQUESTED
+      }
 
     } catch (err) {
       console.error("Search failed", err);
       setError("Patient not found or multiple records exist.");
     } finally {
       setSearchLoading(false);
+    }
+  };
+
+  const handleRequestAccess = async () => {
+    if (!searchedPatient) return;
+    setRequestLoading(true);
+    try {
+      await api.post("/api/access/request", { patientId: searchedPatient.id });
+      setAccessStatus("PENDING");
+      alert("Access request sent!");
+    } catch (e) {
+      console.error("Request failed", e);
+      alert("Failed to send request.");
+    } finally {
+      setRequestLoading(false);
     }
   };
 
@@ -91,7 +122,7 @@ export default function DoctorDashboard() {
     setUploadMessage("");
 
     const formData = new FormData();
-    formData.append("file", prescriptionFile); // Changed "File" to "file" to match backend parameter name
+    formData.append("file", prescriptionFile);
 
     try {
       // Use shared endpoint: /api/reports/upload/{healthCardId}
@@ -109,7 +140,12 @@ export default function DoctorDashboard() {
 
     } catch (err) {
       console.error("Upload failed", err);
-      setUploadMessage("❌ Failed to upload prescription.");
+      // Handle Access Denied specifically
+      if (err.response && err.response.status === 403) {
+        setUploadMessage("❌ Access Denied. You need approval.");
+      } else {
+        setUploadMessage("❌ Failed to upload prescription.");
+      }
     } finally {
       setUploadLoading(false);
     }
@@ -233,85 +269,137 @@ export default function DoctorDashboard() {
               </div>
             </div>
 
-            {/* REPORTS AND PRESCRIPTION UPLOAD */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+            {/* ACCESS CONTROL UI */}
+            {accessStatus === "APPROVED" ? (
+              // ✅ APPROVED: Show Reports & Upload
+              <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
 
-              {/* UPLOAD PRESCRIPTION CARD */}
-              <div style={styles.card}>
-                <h3 style={styles.cardTitle}>
-                  <FaFileMedical /> Upload Prescription
-                </h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                  <p style={{ fontSize: "14px", color: "#666", margin: 0 }}>
-                    Upload a digital prescription for <strong>{searchedPatient.name}</strong>.
-                  </p>
-                  <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                    <input
-                      type="file"
-                      accept="application/pdf"
-                      onChange={(e) => setPrescriptionFile(e.target.files[0])}
-                      style={{
-                        padding: "10px",
-                        border: "1px solid #e2e8f0",
-                        borderRadius: "8px",
-                        flex: 1,
-                        fontSize: "14px"
-                      }}
-                    />
-                    <button
-                      onClick={handleUploadPrescription}
-                      disabled={!prescriptionFile || uploadLoading}
-                      style={{
-                        ...styles.primaryBtn,
-                        background: !prescriptionFile || uploadLoading ? "#cbd5e1" : "linear-gradient(90deg, #5654ff 0%, #764ba2 100%)",
-                        cursor: !prescriptionFile || uploadLoading ? "not-allowed" : "pointer"
-                      }}
-                    >
-                      {uploadLoading ? "Uploading..." : "Upload PDF"}
-                    </button>
-                  </div>
-                  {uploadMessage && (
-                    <p style={{
-                      fontSize: "13px",
-                      color: uploadMessage.includes("success") ? "green" : "red",
-                      fontWeight: "600",
-                      margin: 0
-                    }}>
-                      {uploadMessage}
+                {/* UPLOAD PRESCRIPTION CARD */}
+                <div style={styles.card}>
+                  <h3 style={styles.cardTitle}>
+                    <FaFileMedical /> Upload Prescription
+                  </h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                    <p style={{ fontSize: "14px", color: "#666", margin: 0 }}>
+                      Upload a digital prescription for <strong>{searchedPatient.name}</strong>.
                     </p>
+                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) => setPrescriptionFile(e.target.files[0])}
+                        style={{
+                          padding: "10px",
+                          border: "1px solid #e2e8f0",
+                          borderRadius: "8px",
+                          flex: 1,
+                          fontSize: "14px"
+                        }}
+                      />
+                      <button
+                        onClick={handleUploadPrescription}
+                        disabled={!prescriptionFile || uploadLoading}
+                        style={{
+                          ...styles.primaryBtn,
+                          background: !prescriptionFile || uploadLoading ? "#cbd5e1" : "linear-gradient(90deg, #5654ff 0%, #764ba2 100%)",
+                          cursor: !prescriptionFile || uploadLoading ? "not-allowed" : "pointer"
+                        }}
+                      >
+                        {uploadLoading ? "Uploading..." : "Upload PDF"}
+                      </button>
+                    </div>
+                    {uploadMessage && (
+                      <p style={{
+                        fontSize: "13px",
+                        color: uploadMessage.includes("success") ? "green" : "red",
+                        fontWeight: "600",
+                        margin: 0
+                      }}>
+                        {uploadMessage}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* REPORTS CARD */}
+                <div style={styles.card}>
+                  <h3 style={styles.cardTitle}>
+                    <FaFileMedical /> Medical Reports
+                  </h3>
+                  {patientReports.length === 0 ? (
+                    <p style={{ color: "#777", fontStyle: "italic" }}>No reports found for this patient.</p>
+                  ) : (
+                    <div style={styles.reportsList}>
+                      {patientReports.map((report) => (
+                        <div key={report.id} style={styles.reportItem}>
+                          <div>
+                            <strong>{report.name}</strong>
+                            <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
+                              {report.date} • Uploaded by {report.uploadedBy || "Unknown"}
+                            </div>
+                          </div>
+                          <button
+                            style={styles.downloadBtn}
+                            onClick={async () => {
+                              try {
+                                const api = (await import("../../api/axios")).default;
+                                await api.post("/api/audit/log-view", {
+                                  reportId: report.id,
+                                  patientId: searchedPatient.id
+                                });
+                              } catch (e) { console.error("Log view failed", e); }
+                              window.open(`http://localhost:5133${report.filePath}`, "_blank");
+                            }}
+                          >
+                            <FaDownload /> View
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>
+            ) : (
+              // 🔒 BLOCKED: Show Request Access Button
+              <div style={{ ...styles.card, textAlign: "center", padding: "50px 20px" }}>
+                <div style={{ fontSize: "40px", marginBottom: "20px" }}>🔒</div>
+                <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>Access Restricted</h2>
+                <p style={{ color: "#666", maxWidth: "400px", margin: "0 auto 20px" }}>
+                  You need permission to access <strong>{searchedPatient.name}</strong>'s medical records.
+                </p>
 
-              {/* REPORTS CARD */}
-              <div style={styles.card}>
-                <h3 style={styles.cardTitle}>
-                  <FaFileMedical /> Medical Reports
-                </h3>
-                {patientReports.length === 0 ? (
-                  <p style={{ color: "#777", fontStyle: "italic" }}>No reports found for this patient.</p>
-                ) : (
-                  <div style={styles.reportsList}>
-                    {patientReports.map((report) => (
-                      <div key={report.id} style={styles.reportItem}>
-                        <div>
-                          <strong>{report.name}</strong>
-                          <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
-                            {report.date} • Uploaded by {report.uploadedBy || "Unknown"}
-                          </div>
-                        </div>
-                        <button
-                          style={styles.downloadBtn}
-                          onClick={() => window.open(`http://localhost:5133${report.filePath}`, "_blank")}
-                        >
-                          <FaDownload /> View
-                        </button>
-                      </div>
-                    ))}
+                {accessStatus === "PENDING" ? (
+                  <div style={{
+                    background: "#fef3c7", color: "#d97706", padding: "12px 20px",
+                    borderRadius: "8px", display: "inline-block", fontWeight: "600"
+                  }}>
+                    ⏳ Request Pending...
                   </div>
+                ) : accessStatus === "DENIED" ? (
+                  <div style={{
+                    background: "#fee2e2", color: "#ef4444", padding: "12px 20px",
+                    borderRadius: "8px", display: "inline-block", fontWeight: "600"
+                  }}>
+                    ❌ Access Denied
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleRequestAccess}
+                    disabled={requestLoading}
+                    style={{
+                      ...styles.primaryBtn,
+                      fontSize: "16px",
+                      padding: "12px 30px",
+                      background: "linear-gradient(90deg, #10b981 0%, #059669 100%)"
+                    }}
+                  >
+                    {requestLoading ? "Sending..." : "Request Access"}
+                  </button>
                 )}
               </div>
-            </div>
+            )}
+
+
           </div>
         )}
       </div>
@@ -326,7 +414,7 @@ export default function DoctorDashboard() {
         onCancel={() => setShowLogoutConfirm(false)}
         type="danger"
       />
-    </div>
+    </div >
   );
 }
 

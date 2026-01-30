@@ -48,9 +48,13 @@ public class MedicalReportsController : ControllerBase
              if (string.IsNullOrEmpty(healthCardId))
                  return BadRequest($"{role} must provide a Health Card ID.");
 
-            var p = await _context.Patients.FirstOrDefaultAsync(x => x.HealthCardNumber == healthCardId);
+             var p = await _context.Patients.FirstOrDefaultAsync(x => x.HealthCardNumber == healthCardId);
             if (p == null) return NotFound("Patient with this Health Card ID not found.");
             
+            // Check Access
+            bool hasAccess = await CheckAccess(p.Id, uploaderId, role);
+            if (!hasAccess) return StatusCode(403, "You do not have permission to upload reports for this patient.");
+
             patientId = p.Id;
             targetHealthCardId = p.HealthCardNumber;
         }
@@ -97,6 +101,15 @@ public class MedicalReportsController : ControllerBase
             if (string.IsNullOrEmpty(healthCardId))
                 return BadRequest("Health Card ID is required for doctors.");
 
+            // 1. Find Patient
+            var patient = await _context.Patients.FirstOrDefaultAsync(p => p.HealthCardNumber == healthCardId);
+            if (patient == null) return NotFound("Patient not found");
+
+            // 2. Check Access
+            var requesterId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            bool hasAccess = await CheckAccess(patient.Id, requesterId, "Doctor");
+            if (!hasAccess) return StatusCode(403, "Access to this patient's reports is denied. Request access first.");
+
             var reports = await _context.MedicalReports
                 .Where(r => r.HealthCardId == healthCardId)
                 .OrderByDescending(r => r.UploadedAt)
@@ -112,7 +125,7 @@ public class MedicalReportsController : ControllerBase
                 .ToListAsync();
 
             if (!reports.Any())
-                return Ok(new List<object>()); // Return empty list to avoid frontend errors
+                return Ok(new List<object>()); 
 
             return Ok(reports);
         }
@@ -126,7 +139,6 @@ public class MedicalReportsController : ControllerBase
             
             if (patient == null) return BadRequest("Patient details not found");
 
-            // ✅ Access by HealthCardId (User Request) OR PatientId (Backwards Comp)
             var reports = await _context.MedicalReports
                 .Where(r => r.HealthCardId == patient.HealthCardNumber || r.PatientId == patientId)
                 .OrderByDescending(r => r.UploadedAt)
@@ -144,5 +156,13 @@ public class MedicalReportsController : ControllerBase
             return Ok(reports);
         }
     }
+
+    private async Task<bool> CheckAccess(int patientId, int requesterId, string role)
+    {
+        var request = await _context.AccessRequests
+            .FirstOrDefaultAsync(r => r.PatientId == patientId && r.RequesterId == requesterId && r.RequesterRole == role && r.Status == "APPROVED");
+        return request != null;
+    }
+
 
 }

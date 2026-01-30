@@ -17,6 +17,11 @@ namespace HealthCardAPI.Data
         public DbSet<Doctor> Doctors { get; set; }
       
         public DbSet<MedicalReport> MedicalReports { get; set; }
+        public DbSet<ReportAccessLog> ReportAccessLogs { get; set; }
+        public DbSet<AccessRequest> AccessRequests { get; set; }
+
+
+
         public DbSet<Nominee> Nominees { get; set; }
         public DbSet<OtpVerification> OtpVerifications { get; set; }
         public DbSet<AadhaarMock> AadhaarMocks { get; set; }

@@ -3,6 +3,7 @@ using System;
 using HealthCardAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthCardAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260130110403_AddAccessRequests")]
+    partial class AddAccessRequests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,7 +343,7 @@ namespace HealthCardAPI.Migrations
                             Name = "Rahul Kumar Sharma",
                             NomineeId = 3016,
                             PhoneNumber = 7588111644L,
-                            RegistrationDate = new DateTime(2026, 1, 30, 19, 56, 59, 493, DateTimeKind.Local).AddTicks(5285)
+                            RegistrationDate = new DateTime(2026, 1, 30, 16, 34, 3, 245, DateTimeKind.Local).AddTicks(2315)
                         });
                 });
 

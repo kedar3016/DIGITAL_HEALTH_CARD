@@ -68,18 +68,18 @@ export default function AboutUs() {
                         gap: "40px",
                         marginTop: "40px"
                     }}>
-                        <div>
-                            <h3 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginBottom: "5px" }}>15K+</h3>
-                            <p style={{ color: "#64748b", fontSize: "14px", fontWeight: "600" }}>Active Patients</p>
-                        </div>
-                        <div>
+                        {/* <div>
+                            <h3 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginBottom: "5px" }}></h3>
+                            <p style={{ color: "#64748b", fontSize: "14px", fontWeight: "600" }}></p>
+                        </div> */}
+                        {/* <div>
                             <h3 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginBottom: "5px" }}>750+</h3>
                             <p style={{ color: "#64748b", fontSize: "14px", fontWeight: "600" }}>Verified Doctors</p>
                         </div>
                         <div>
                             <h3 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginBottom: "5px" }}>200+</h3>
                             <p style={{ color: "#64748b", fontSize: "14px", fontWeight: "600" }}>Partner Labs</p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 

@@ -29,6 +29,10 @@ export default function LabTechDashboard() {
     const [uploadLoading, setUploadLoading] = useState(false);
     const [uploadMessage, setUploadMessage] = useState("");
 
+    /* New State for Access */
+    const [accessStatus, setAccessStatus] = useState("NOT_REQUESTED"); // NOT_REQUESTED, PENDING, APPROVED, DENIED
+    const [requestLoading, setRequestLoading] = useState(false);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -59,19 +63,42 @@ export default function LabTechDashboard() {
         setError("");
         setSearchedPatient(null);
         setPatientReports([]);
+        setAccessStatus("NOT_REQUESTED"); // Reset status
 
         try {
             // 1. Search Patient
             const patientRes = await api.get(`/api/Patients/readonly/${searchId}`);
             setSearchedPatient(patientRes.data);
 
-            // Lab Technicians do not view reports, so we don't fetch them.
+            // 2. Check Access Status
+            try {
+                const accessRes = await api.get(`/api/access/status/${patientRes.data.id}`);
+                setAccessStatus(accessRes.data.status); // PENDING, APPROVED, DENIED
+                // Note: Lab Techs don't view reports, so no need to fetch them even if approved
+            } catch (accessErr) {
+                console.error("Failed to check access", accessErr);
+            }
 
         } catch (err) {
             console.error("Search failed", err);
             setError("Patient not found or multiple records exist.");
         } finally {
             setSearchLoading(false);
+        }
+    };
+
+    const handleRequestAccess = async () => {
+        if (!searchedPatient) return;
+        setRequestLoading(true);
+        try {
+            await api.post("/api/access/request", { patientId: searchedPatient.id });
+            setAccessStatus("PENDING");
+            alert("Access request sent!");
+        } catch (e) {
+            console.error("Request failed", e);
+            alert("Failed to send request.");
+        } finally {
+            setRequestLoading(false);
         }
     };
 
@@ -97,14 +124,17 @@ export default function LabTechDashboard() {
             setUploadMessage("✅ Report uploaded successfully!");
             setReportFile(null);
 
-            // No need to refresh reports as Lab Techs don't see them
-
             // Clear message after 3 seconds
             setTimeout(() => setUploadMessage(""), 3000);
 
         } catch (err) {
             console.error("Upload failed", err);
-            setUploadMessage("❌ Failed to upload report.");
+            // Handle Access Denied specifically
+            if (err.response && err.response.status === 403) {
+                setUploadMessage("❌ Access Denied. You need approval.");
+            } else {
+                setUploadMessage("❌ Failed to upload report.");
+            }
         } finally {
             setUploadLoading(false);
         }
@@ -228,58 +258,95 @@ export default function LabTechDashboard() {
                             </div>
                         </div>
 
-                        {/* UPLOAD & REPORTS */}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
-
-                            {/* UPLOAD REPORT CARD */}
-                            <div style={styles.card}>
-                                <h3 style={styles.cardTitle}>
-                                    <FaClipboardList /> Upload Lab Report
-                                </h3>
-                                <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                                    <p style={{ fontSize: "14px", color: "#666", margin: 0 }}>
-                                        Upload a diagnostic report (PDF) for <strong>{searchedPatient.name}</strong>.
-                                    </p>
-                                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                                        <input
-                                            type="file"
-                                            accept="application/pdf"
-                                            onChange={(e) => setReportFile(e.target.files[0])}
-                                            style={{
-                                                padding: "10px",
-                                                border: "1px solid #e2e8f0",
-                                                borderRadius: "8px",
-                                                flex: 1,
-                                                fontSize: "14px"
-                                            }}
-                                        />
-                                        <button
-                                            onClick={handleUploadReport}
-                                            disabled={!reportFile || uploadLoading}
-                                            style={{
-                                                ...styles.primaryBtn,
-                                                background: !reportFile || uploadLoading ? "#cbd5e1" : "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-                                                cursor: !reportFile || uploadLoading ? "not-allowed" : "pointer"
-                                            }}
-                                        >
-                                            {uploadLoading ? "Uploading..." : "Upload PDF"}
-                                        </button>
-                                    </div>
-                                    {uploadMessage && (
-                                        <p style={{
-                                            fontSize: "13px",
-                                            color: uploadMessage.includes("success") ? "green" : "red",
-                                            fontWeight: "600",
-                                            margin: 0
-                                        }}>
-                                            {uploadMessage}
+                        {/* ACCESS CONTROL & UPLOAD */}
+                        {accessStatus === "APPROVED" ? (
+                            <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+                                {/* UPLOAD REPORT CARD */}
+                                <div style={styles.card}>
+                                    <h3 style={styles.cardTitle}>
+                                        <FaClipboardList /> Upload Lab Report
+                                    </h3>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                                        <p style={{ fontSize: "14px", color: "#666", margin: 0 }}>
+                                            Upload a diagnostic report (PDF) for <strong>{searchedPatient.name}</strong>.
                                         </p>
-                                    )}
+                                        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                                            <input
+                                                type="file"
+                                                accept="application/pdf"
+                                                onChange={(e) => setReportFile(e.target.files[0])}
+                                                style={{
+                                                    padding: "10px",
+                                                    border: "1px solid #e2e8f0",
+                                                    borderRadius: "8px",
+                                                    flex: 1,
+                                                    fontSize: "14px"
+                                                }}
+                                            />
+                                            <button
+                                                onClick={handleUploadReport}
+                                                disabled={!reportFile || uploadLoading}
+                                                style={{
+                                                    ...styles.primaryBtn,
+                                                    background: !reportFile || uploadLoading ? "#cbd5e1" : "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+                                                    cursor: !reportFile || uploadLoading ? "not-allowed" : "pointer"
+                                                }}
+                                            >
+                                                {uploadLoading ? "Uploading..." : "Upload PDF"}
+                                            </button>
+                                        </div>
+                                        {uploadMessage && (
+                                            <p style={{
+                                                fontSize: "13px",
+                                                color: uploadMessage.includes("success") ? "green" : "red",
+                                                fontWeight: "600",
+                                                margin: 0
+                                            }}>
+                                                {uploadMessage}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
+                        ) : (
+                            // 🔒 BLOCKED: Show Request Access Button
+                            <div style={{ ...styles.card, textAlign: "center", padding: "50px 20px" }}>
+                                <div style={{ fontSize: "40px", marginBottom: "20px" }}>🔒</div>
+                                <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>Access Restricted</h2>
+                                <p style={{ color: "#666", maxWidth: "400px", margin: "0 auto 20px" }}>
+                                    You need permission to upload reports for <strong>{searchedPatient.name}</strong>.
+                                </p>
 
-
-                        </div>
+                                {accessStatus === "PENDING" ? (
+                                    <div style={{
+                                        background: "#fef3c7", color: "#d97706", padding: "12px 20px",
+                                        borderRadius: "8px", display: "inline-block", fontWeight: "600"
+                                    }}>
+                                        ⏳ Request Pending...
+                                    </div>
+                                ) : accessStatus === "DENIED" ? (
+                                    <div style={{
+                                        background: "#fee2e2", color: "#ef4444", padding: "12px 20px",
+                                        borderRadius: "8px", display: "inline-block", fontWeight: "600"
+                                    }}>
+                                        ❌ Access Denied
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={handleRequestAccess}
+                                        disabled={requestLoading}
+                                        style={{
+                                            ...styles.primaryBtn,
+                                            fontSize: "16px",
+                                            padding: "12px 30px",
+                                            background: "linear-gradient(90deg, #10b981 0%, #059669 100%)"
+                                        }}
+                                    >
+                                        {requestLoading ? "Sending..." : "Request Access"}
+                                    </button>
+                                )}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

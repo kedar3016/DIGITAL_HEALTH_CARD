@@ -305,24 +305,7 @@ export default function Footer() {
             gap: "24px",
             flexWrap: "wrap"
           }}>
-            <span style={{
-              fontSize: "0.85rem",
-              color: "#94a3b8"
-            }}>
-              🛡️ SOC 2 Type II Certified
-            </span>
-            <span style={{
-              fontSize: "0.85rem",
-              color: "#94a3b8"
-            }}>
-              🔒 HIPAA Compliant
-            </span>
-            <span style={{
-              fontSize: "0.85rem",
-              color: "#94a3b8"
-            }}>
-              ✅ ISO 27001 Certified
-            </span>
+
           </div>
         </div>
       </div>
