@@ -99,7 +99,7 @@ export default function Hero() {
           fontWeight: "600"
         }}>
           <span style={{ color: "#fbbf24" }}>⭐</span>
-          Trusted by 15,000+ Healthcare Professionals
+          Trusted by Healthcare Professionals
         </div>
 
         {/* Main Headline */}
@@ -161,14 +161,14 @@ export default function Hero() {
               alignItems: "center",
               gap: "10px"
             }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-3px)";
-              e.target.style.boxShadow = "0 15px 35px rgba(0, 0, 0, 0.2)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.boxShadow = "0 8px 25px rgba(0, 0, 0, 0.15)";
-            }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = "translateY(-3px)";
+                e.target.style.boxShadow = "0 15px 35px rgba(0, 0, 0, 0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = "translateY(0)";
+                e.target.style.boxShadow = "0 8px 25px rgba(0, 0, 0, 0.15)";
+              }}
             >
               <span>👤</span>
               Access My Health Card
@@ -191,16 +191,16 @@ export default function Hero() {
               alignItems: "center",
               gap: "10px"
             }}
-            onMouseEnter={(e) => {
-              e.target.style.background = "rgba(255, 255, 255, 0.2)";
-              e.target.style.borderColor = "rgba(255, 255, 255, 0.5)";
-              e.target.style.transform = "translateY(-3px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "rgba(255, 255, 255, 0.1)";
-              e.target.style.borderColor = "rgba(255, 255, 255, 0.3)";
-              e.target.style.transform = "translateY(0)";
-            }}
+              onMouseEnter={(e) => {
+                e.target.style.background = "rgba(255, 255, 255, 0.2)";
+                e.target.style.borderColor = "rgba(255, 255, 255, 0.5)";
+                e.target.style.transform = "translateY(-3px)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "rgba(255, 255, 255, 0.1)";
+                e.target.style.borderColor = "rgba(255, 255, 255, 0.3)";
+                e.target.style.transform = "translateY(0)";
+              }}
             >
               <span>👨‍⚕️</span>
               Doctor Login
@@ -224,14 +224,14 @@ export default function Hero() {
               marginBottom: "8px",
               textShadow: "0 2px 10px rgba(0, 0, 0, 0.2)"
             }}>
-              15K+
+
             </div>
             <div style={{
               fontSize: "0.9rem",
               opacity: 0.8,
               fontWeight: "500"
             }}>
-              Active Patients
+
             </div>
           </div>
           <div style={{ textAlign: "center" }}>
@@ -241,14 +241,14 @@ export default function Hero() {
               marginBottom: "8px",
               textShadow: "0 2px 10px rgba(0, 0, 0, 0.2)"
             }}>
-              750+
+
             </div>
             <div style={{
               fontSize: "0.9rem",
               opacity: 0.8,
               fontWeight: "500"
             }}>
-              Verified Doctors
+
             </div>
           </div>
           <div style={{ textAlign: "center" }}>
@@ -258,14 +258,14 @@ export default function Hero() {
               marginBottom: "8px",
               textShadow: "0 2px 10px rgba(0, 0, 0, 0.2)"
             }}>
-              200+
+
             </div>
             <div style={{
               fontSize: "0.9rem",
               opacity: 0.8,
               fontWeight: "500"
             }}>
-              Partner Labs
+
             </div>
           </div>
           <div style={{ textAlign: "center" }}>
@@ -275,14 +275,14 @@ export default function Hero() {
               marginBottom: "8px",
               textShadow: "0 2px 10px rgba(0, 0, 0, 0.2)"
             }}>
-              4.9★
+
             </div>
             <div style={{
               fontSize: "0.9rem",
               opacity: 0.8,
               fontWeight: "500"
             }}>
-              User Rating
+
             </div>
           </div>
         </div>
@@ -297,9 +297,9 @@ export default function Hero() {
         animation: "bounce 2s infinite",
         cursor: "pointer"
       }}
-      onClick={() => {
-        document.querySelector('#features')?.scrollIntoView({ behavior: 'smooth' });
-      }}
+        onClick={() => {
+          document.querySelector('#features')?.scrollIntoView({ behavior: 'smooth' });
+        }}
       >
         <div style={{
           width: "24px",

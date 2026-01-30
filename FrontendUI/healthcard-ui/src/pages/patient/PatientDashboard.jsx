@@ -68,6 +68,28 @@ export default function PatientDashboard() {
     }
   };
 
+  const [notifications, setNotifications] = useState([]);
+  const [accessRequests, setAccessRequests] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  const handleRespondAccess = async (requestId, action) => {
+    try {
+      const api = (await import("../../api/axios")).default;
+      await api.post("/api/access/respond", { requestId, action });
+
+      setNotification(action === "APPROVED" ? "✅ Request Approved" : "❌ Request Denied");
+      setTimeout(() => setNotification(""), 3000);
+
+      // Refresh requests
+      const newRequests = accessRequests.filter(r => r.id !== requestId);
+      setAccessRequests(newRequests);
+
+    } catch (e) {
+      console.error("Failed to respond", e);
+      alert("Failed to process response");
+    }
+  };
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -96,6 +118,22 @@ export default function PatientDashboard() {
 
         // Fetch Reports
         await fetchReports(api);
+
+        // Fetch Notifications
+        try {
+          const notifRes = await api.get(`/api/audit/patient-notifications/${aadhaar}`);
+          setNotifications(notifRes.data);
+        } catch (e) {
+          console.error("Failed to load notifications", e);
+        }
+
+        // Fetch Access Requests
+        try {
+          const accessRes = await api.get("/api/access/pending");
+          setAccessRequests(accessRes.data);
+        } catch (e) {
+          console.error("Failed to load access requests", e);
+        }
 
       } catch (error) {
         console.error("Failed to load dashboard data", error);
@@ -180,39 +218,122 @@ export default function PatientDashboard() {
           </div>
         </div>
 
-        {/* PROFILE DROPDOWN */}
-        <div className="profile-dropdown-container">
-          <div
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="profile-icon-btn"
-          >
-            <FaUser size={24} color="white" />
-          </div>
+        {/* ICONS CONTAINER */}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
 
-          {showDropdown && (
-            <div className="dropdown-menu">
-              <div className="dropdown-header">
-                <div className="dropdown-avatar">
-                  <FaUser color="#5654ff" size={16} />
-                </div>
-                <div>
-                  <span className="user-name">
-                    {patient ? patient.name : "User"}
+          {/* NOTIFICATION BELL */}
+          <div className="notification-container">
+            <div
+              className="notification-icon-btn"
+              onClick={() => {
+                setShowNotifications(!showNotifications);
+                setShowDropdown(false); // Close profile dropdown
+              }}
+            >
+              <span style={{ fontSize: "20px" }}>🔔</span>
+              {notifications.length + accessRequests.length > 0 && (
+                <div className="notification-badge">{notifications.length + accessRequests.length}</div>
+              )}
+            </div>
+
+            {showNotifications && (
+              <div className="notification-dropdown">
+                <div className="notification-header">
+                  <span>Notifications</span>
+                  {/* Total Count */}
+                  <span style={{ fontSize: "12px", color: "#64748b", fontWeight: "normal" }}>
+                    {notifications.length + accessRequests.length} New
                   </span>
-                  <span className="user-role">Patient Account</span>
+                </div>
+
+                <div className="notification-list">
+                  {/* ACCESS REQUESTS SECTION */}
+                  {accessRequests.length > 0 && (
+                    <div style={{ borderBottom: "1px solid #e2e8f0", paddingBottom: "10px", marginBottom: "10px" }}>
+                      <div style={{ padding: "0 15px", marginBottom: "8px", fontSize: "12px", fontWeight: "700", color: "#d97706" }}>
+                        PERMISSION REQUESTS
+                      </div>
+                      {accessRequests.map((req) => (
+                        <div key={req.id} className="notification-item" style={{ background: "#fffbeb" }}>
+                          <div className="notif-icon-box">🔒</div>
+                          <div className="notif-content" style={{ width: "100%" }}>
+                            <span className="notif-message">
+                              <strong>{req.requesterName}</strong> wants to access your records.
+                            </span>
+                            <div style={{ display: "flex", gap: "10px", marginTop: "8px" }}>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleRespondAccess(req.id, "APPROVED"); }}
+                                style={{ background: "#22c55e", color: "white", border: "none", padding: "4px 10px", borderRadius: "4px", cursor: "pointer", fontSize: "12px" }}>
+                                Approve
+                              </button>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleRespondAccess(req.id, "DENIED"); }}
+                                style={{ background: "#ef4444", color: "white", border: "none", padding: "4px 10px", borderRadius: "4px", cursor: "pointer", fontSize: "12px" }}>
+                                Deny
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* REGULAR NOTIFICATIONS */}
+                  {notifications.length === 0 && accessRequests.length === 0 ? (
+                    <div className="notification-empty">No updates yet</div>
+                  ) : (
+                    notifications.map((n, i) => (
+                      <div key={i} className="notification-item">
+                        <div className="notif-icon-box">{n.icon}</div>
+                        <div className="notif-content">
+                          <span className="notif-message">{n.message}</span>
+                          <span className="notif-time">
+                            {new Date(n.date).toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
-              <div className="dropdown-divider"></div>
-              <button onClick={handleLogoutClick} className="dropdown-item">
-                <FaSignOutAlt /> Logout
-              </button>
+            )}
+          </div>
+
+          {/* PROFILE DROPDOWN */}
+          <div className="profile-dropdown-container">
+            <div
+              onClick={() => {
+                setShowDropdown(!showDropdown);
+                setShowNotifications(false); // Close notifications
+              }}
+              className="profile-icon-btn"
+            >
+              <FaUser size={24} color="white" />
             </div>
-          )}
+
+            {showDropdown && (
+              <div className="dropdown-menu">
+                <div className="dropdown-header">
+                  <div className="dropdown-avatar">
+                    <FaUser color="#5654ff" size={16} />
+                  </div>
+                  <div>
+                    <span className="user-name">
+                      {patient ? patient.name : "User"}
+                    </span>
+                    <span className="user-role">Patient Account</span>
+                  </div>
+                </div>
+                <div className="dropdown-divider"></div>
+                <button onClick={handleLogoutClick} className="dropdown-item">
+                  <FaSignOutAlt /> Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-
-
-
       </div>
+
 
       {/* MAIN CONTENT */}
       <div className="dashboard-grid">

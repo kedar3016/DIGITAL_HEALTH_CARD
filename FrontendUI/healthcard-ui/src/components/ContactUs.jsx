@@ -70,7 +70,7 @@ export default function ContactUs() {
                             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                                     <div style={{ width: "40px", height: "40px", background: "#f1f5f9", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>📍</div>
-                                    <span style={{ color: "#475569" }}>New Delhi, India</span>
+                                    <span style={{ color: "#475569" }}>Pune, India</span>
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                                     <div style={{ width: "40px", height: "40px", background: "#f1f5f9", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>📧</div>

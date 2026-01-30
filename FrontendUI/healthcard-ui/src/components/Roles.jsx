@@ -9,7 +9,7 @@ export default function Roles() {
       link: "/login/patient",
       color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       features: ["Digital Health Card", "Report Downloads", "Appointment Management", "Emergency Access"],
-      stats: "15,000+ Active Users"
+      stats: "Active Users"
     },
     {
       title: "Doctor",
@@ -18,7 +18,7 @@ export default function Roles() {
       link: "/login/doctor",
       color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
       features: ["Patient Verification", "Medical Records", "Telemedicine", "Secure Collaboration"],
-      stats: "750+ Verified Doctors"
+      stats: "Verified Doctors"
     },
     {
       title: "Lab Technician",
@@ -27,7 +27,7 @@ export default function Roles() {
       link: "/login/lab",
       color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
       features: ["Report Upload", "Quality Control", "Instant Sharing", "Digital Verification"],
-      stats: "200+ Partner Labs"
+      stats: "Partner Labs"
     },
     {
       title: "Hospital Admin",
@@ -36,7 +36,7 @@ export default function Roles() {
       link: "/login/admin",
       color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
       features: ["User Management", "System Monitoring", "Compliance", "Analytics Dashboard"],
-      stats: "50+ Hospitals"
+      stats: "Hospitals"
     },
   ];
 
@@ -217,14 +217,14 @@ export default function Roles() {
                   transition: "all 0.3s ease",
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"
                 }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = "translateY(-2px)";
-                  e.target.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.2)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "translateY(0)";
-                  e.target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
-                }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = "translateY(-2px)";
+                    e.target.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.2)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = "translateY(0)";
+                    e.target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
+                  }}
                 >
                   Login as {role.title}
                 </button>
@@ -271,14 +271,14 @@ export default function Roles() {
                 cursor: "pointer",
                 transition: "all 0.3s ease"
               }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "none";
-              }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "translateY(-2px)";
+                  e.target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.boxShadow = "none";
+                }}
               >
                 Register as Patient
               </button>
@@ -295,16 +295,16 @@ export default function Roles() {
                 cursor: "pointer",
                 transition: "all 0.3s ease"
               }}
-              onMouseEnter={(e) => {
-                e.target.style.background = "white";
-                e.target.style.color = "#667eea";
-                e.target.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = "rgba(255, 255, 255, 0.2)";
-                e.target.style.color = "white";
-                e.target.style.transform = "translateY(0)";
-              }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "white";
+                  e.target.style.color = "#667eea";
+                  e.target.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "rgba(255, 255, 255, 0.2)";
+                  e.target.style.color = "white";
+                  e.target.style.transform = "translateY(0)";
+                }}
               >
                 Register as Doctor
               </button>

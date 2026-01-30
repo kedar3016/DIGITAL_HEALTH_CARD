@@ -16,11 +16,14 @@ namespace HealthCardAPI.Controllers
         private readonly ISmsService _smsService;
         private readonly IJwtService _jwtService;
 
-        public AuthController(AppDbContext context, ISmsService smsService, IJwtService jwtService)
+        private readonly IEmailService _emailService;
+
+        public AuthController(AppDbContext context, ISmsService smsService, IJwtService jwtService, IEmailService emailService)
         {
             _context = context;
             _smsService = smsService;
             _jwtService = jwtService;
+            _emailService = emailService;
         }
 
         [HttpPost("send-login-otp")]
@@ -125,8 +128,17 @@ public async Task<IActionResult> DoctorLogin(DoctorLoginDto dto)
         else
             _doctorOtps.Add(dto.Email, otp);
 
-        // Return OTP in response as requested for demo
-        return Ok(new { message = $"OTP sent. For demo purposes: {otp}", otp = otp });
+        // Send Email
+        try 
+        {
+            await _emailService.SendEmailAsync(dto.Email, "Doctor Password Reset OTP", $"Your OTP for password reset is: <b>{otp}</b>");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Failed to send email: {ex.Message}");
+        }
+
+        return Ok(new { message = "OTP sent to your registered email." });
     }
 
     [HttpPost("doctor/reset-password")]
@@ -216,8 +228,17 @@ public async Task<IActionResult> DoctorLogin(DoctorLoginDto dto)
             else
                 _labTechOtps.Add(dto.Email, otp);
 
-            // Return OTP in response as requested for demo
-            return Ok(new { message = $"OTP sent. For demo purposes: {otp}", otp = otp });
+            // Send Email
+            try
+            {
+                await _emailService.SendEmailAsync(dto.Email, "Lab Technician Password Reset OTP", $"Your OTP for password reset is: <b>{otp}</b>");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Failed to send email: {ex.Message}");
+            }
+
+            return Ok(new { message = "OTP sent to your registered email." });
         }
 
         [HttpPost("lab-tech/reset-password")]

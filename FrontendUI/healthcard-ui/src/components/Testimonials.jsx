@@ -239,44 +239,44 @@ export default function Testimonials() {
                 fontSize: "2.5rem",
                 fontWeight: "800",
                 marginBottom: "8px"
-              }}>15K+</div>
+              }}></div>
               <div style={{
                 fontSize: "0.9rem",
                 opacity: 0.8
-              }}>Active Patients</div>
+              }}></div>
             </div>
             <div>
               <div style={{
                 fontSize: "2.5rem",
                 fontWeight: "800",
                 marginBottom: "8px"
-              }}>750+</div>
+              }}></div>
               <div style={{
                 fontSize: "0.9rem",
                 opacity: 0.8
-              }}>Verified Doctors</div>
+              }}></div>
             </div>
             <div>
               <div style={{
                 fontSize: "2.5rem",
                 fontWeight: "800",
                 marginBottom: "8px"
-              }}>200+</div>
+              }}></div>
               <div style={{
                 fontSize: "0.9rem",
                 opacity: 0.8
-              }}>Partner Labs</div>
+              }}></div>
             </div>
             <div>
               <div style={{
                 fontSize: "2.5rem",
                 fontWeight: "800",
                 marginBottom: "8px"
-              }}>4.9★</div>
+              }}></div>
               <div style={{
                 fontSize: "0.9rem",
                 opacity: 0.8
-              }}>User Rating</div>
+              }}></div>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ using System;
 using HealthCardAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthCardAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260130103654_AddReportAccessLogs")]
+    partial class AddReportAccessLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,37 +108,6 @@ namespace HealthCardAPI.Migrations
                             Role = "Patient",
                             Username = "123456789012"
                         });
-                });
-
-            modelBuilder.Entity("HealthCardAPI.Models.AccessRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("RequestedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("RequesterId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RequesterRole")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("RespondedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AccessRequests");
                 });
 
             modelBuilder.Entity("HealthCardAPI.Models.Doctor", b =>
@@ -340,7 +312,7 @@ namespace HealthCardAPI.Migrations
                             Name = "Rahul Kumar Sharma",
                             NomineeId = 3016,
                             PhoneNumber = 7588111644L,
-                            RegistrationDate = new DateTime(2026, 1, 30, 19, 56, 59, 493, DateTimeKind.Local).AddTicks(5285)
+                            RegistrationDate = new DateTime(2026, 1, 30, 16, 6, 51, 716, DateTimeKind.Local).AddTicks(6558)
                         });
                 });
 

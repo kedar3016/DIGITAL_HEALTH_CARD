@@ -100,12 +100,12 @@ internal class Program
         builder.Services.AddScoped<IPatientRepository, PatientRepository>();
         builder.Services.AddScoped<IOtpService, OtpService>();
 
-        // ✅ ADDED THESE TWO LINES
         builder.Services.AddScoped<ILabTechnicianRepository, LabTechnicianRepository>();
         builder.Services.AddScoped<ILabTechnicianService, LabTechnicianService>();
-        // -----------------------
+       
 
         builder.Services.AddScoped<ISmsService, TwilioSmsService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
 
         var app = builder.Build();
