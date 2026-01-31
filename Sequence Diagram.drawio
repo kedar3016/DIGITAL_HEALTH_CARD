@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.6">
+  <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
+    <mxGraphModel dx="1295" dy="648" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-1" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="Patient" vertex="1">
+          <mxGeometry height="784" width="150" x="20" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-2" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="ReactFrontend" vertex="1">
+          <mxGeometry height="784" width="150" x="257" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="DotNetBackendAPI" vertex="1">
+          <mxGeometry height="784" width="155" x="540" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="OTPService" vertex="1">
+          <mxGeometry height="784" width="150" x="745" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="Database" vertex="1">
+          <mxGeometry height="784" width="150" x="945" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-6" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-1" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-2" value="Enters Aadhaar number">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="222" y="469" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-7" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-2" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-3" value="Sends login request">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="483" y="523" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-8" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-4" value="Requests OTP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="727" y="577" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-9" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-1" value="Sends OTP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="469" y="631" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-10" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-1" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-2" value="Enters OTP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="222" y="685" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-11" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-2" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-3" value="Sends OTP verification request">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="483" y="739" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-12" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-3" style="curved=1;endArrow=block;rounded=0;" target="k2pExaE0tV4w5Ts6jOsu-3" value="Verifies OTP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="668" y="793" />
+              <mxPoint x="668" y="823" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-13" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-5" value="Requests patient records">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="827" y="877" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-14" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-5" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-3" value="Returns patient data">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="931" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-15" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-2" value="Sends records">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="486" y="985" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k2pExaE0tV4w5Ts6jOsu-16" edge="1" parent="1" source="k2pExaE0tV4w5Ts6jOsu-2" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="k2pExaE0tV4w5Ts6jOsu-1" value="Displays health records">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="225" y="1039" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
