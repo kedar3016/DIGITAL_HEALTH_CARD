@@ -25,7 +25,7 @@ export default function PatientReports() {
               <li key={r.id} style={{ marginBottom: "10px", padding: "10px", border: "1px solid #ccc", borderRadius: "5px" }}>
                 <strong>{r.reportName}</strong> – Uploaded by {r.uploadedBy}
                 <br />
-                <a href={`http://localhost:5133${r.filePath}`} target="_blank" rel="noopener noreferrer">
+                <a href={`${baseUrl}${r.filePath}`} target="_blank" rel="noopener noreferrer">
                   View PDF
                 </a>
               </li>

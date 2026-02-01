@@ -41,7 +41,7 @@ namespace HealthCardAPI.Services
 
 
             // 4️⃣ Send SMS (REAL DELIVERY)  For Testing Pause SMS Service
-          //  await _smsService.SendOtpAsync(aadhaar.Mobile, otp);   
+          await _smsService.SendOtpAsync(aadhaar.Mobile, otp);   
 
             // 5️⃣ Masked response
             return $"OTP sent to registered mobile ****{aadhaar.Mobile % 10000},OTP IS {otp}";

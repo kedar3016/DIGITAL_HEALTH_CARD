@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function DownloadHealthCard() {
   const download = () => {
     window.open(
-      "http://localhost:5133/api/patients/health-card",
+      `${baseUrl}/api/patients/health-card`,
       "_blank"
     );
   };

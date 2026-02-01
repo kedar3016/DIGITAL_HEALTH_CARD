@@ -15,11 +15,13 @@ namespace HealthCardAPI.Controllers
     {
         private readonly IPatientService _service;
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public PatientsController(IPatientService service,AppDbContext context)
+        public PatientsController(IPatientService service, AppDbContext context, IWebHostEnvironment env)
         {
             _service = service;
             _context = context;
+            _env = env;
         }
 
         [Authorize]
@@ -105,7 +107,22 @@ namespace HealthCardAPI.Controllers
                 nominee = _context.Nominees.FirstOrDefault(n => n.Id == patient.NomineeId);
             }
 
-            var pdfBytes = HealthCardPdfGenerator.Generate(patient, nominee);
+            // Load profile image
+            byte[] profileImage = null;
+            try
+            {
+                var imagePath = Path.Combine(_env.WebRootPath, "images", "profile_icon.png");
+                if (System.IO.File.Exists(imagePath))
+                {
+                    profileImage = System.IO.File.ReadAllBytes(imagePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load profile image: {ex.Message}");
+            }
+
+            var pdfBytes = HealthCardPdfGenerator.Generate(patient, nominee, profileImage);
 
             return File(pdfBytes, "application/pdf", "SmartHealthCard.pdf");
         }

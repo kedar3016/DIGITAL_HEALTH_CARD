@@ -59,7 +59,7 @@ namespace HealthCardAPI.Data
                     PhoneNumber = 7588111644,
                     Email = "rahul@example.com",
                     Address = "123 MG Road, Bangalore",
-                    HealthCardNumber = "HC123456789012",
+                    HealthCardNumber = "HC-123456789012",
                     RegistrationDate = DateTime.Now,
                     NomineeId = 3016
                 }

@@ -5,10 +5,13 @@ import {
   FaFileMedical,
   FaDownload,
   FaSignOutAlt,
+  FaTrash,
 } from "react-icons/fa";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import "./PatientDashboard.css";
 
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export default function PatientDashboard() {
   const [patient, setPatient] = useState(null);
@@ -68,9 +71,26 @@ export default function PatientDashboard() {
     }
   };
 
+  const handleDeleteReport = async (reportId) => {
+    if (!window.confirm("Are you sure you want to delete this report?")) return;
+
+    try {
+      const api = (await import("../../api/axios")).default;
+      await api.delete(`/api/reports/delete/${reportId}`);
+      setNotification("✅ Report deleted successfully!");
+      setReports(reports.filter(r => r.id !== reportId));
+      setTimeout(() => setNotification(""), 3000);
+    } catch (error) {
+      console.error("Delete failed", error);
+      setNotification("❌ Failed to delete report.");
+      setTimeout(() => setNotification(""), 3000);
+    }
+  };
+
   const [notifications, setNotifications] = useState([]);
   const [accessRequests, setAccessRequests] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [hasViewedNotifications, setHasViewedNotifications] = useState(false);
 
   const handleRespondAccess = async (requestId, action) => {
     try {
@@ -228,10 +248,11 @@ export default function PatientDashboard() {
               onClick={() => {
                 setShowNotifications(!showNotifications);
                 setShowDropdown(false); // Close profile dropdown
+                if (!showNotifications) setHasViewedNotifications(true);
               }}
             >
               <span style={{ fontSize: "20px" }}>🔔</span>
-              {notifications.length + accessRequests.length > 0 && (
+              {!hasViewedNotifications && (notifications.length + accessRequests.length > 0) && (
                 <div className="notification-badge">{notifications.length + accessRequests.length}</div>
               )}
             </div>
@@ -382,7 +403,7 @@ export default function PatientDashboard() {
                         <span className="value-small">{patient.gender}</span>
                       </div>
                       <div>
-                        <span className="detail-label">Blood</span><br />
+                        <span className="detail-label">Blood Group</span><br />
                         <span className="value-highlight">{patient.bloodGroup}</span>
                       </div>
                     </div>
@@ -438,12 +459,21 @@ export default function PatientDashboard() {
                 <strong>{r.name}</strong>
                 <p className="report-date">{r.date}</p>
               </div>
-              <button
-                className="download-btn-small"
-                onClick={() => window.open(`http://localhost:5133${r.filePath}`, "_blank")}
-              >
-                <FaDownload />
-              </button>
+              <div className="report-actions">
+                <button
+                  className="download-btn-small"
+                  onClick={() => window.open(`${baseUrl}${r.filePath}`, "_blank")}
+                >
+                  <FaDownload />
+                </button>
+                <button
+                  className="delete-btn-small"
+                  onClick={() => handleDeleteReport(r.id)}
+                  title="Delete Report"
+                >
+                  <FaTrash />
+                </button>
+              </div>
             </div>
           ))}
         </div>

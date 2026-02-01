@@ -7,7 +7,7 @@ namespace HealthCardAPI.Services
 {
     public class HealthCardPdfGenerator
     {
-        public static byte[] Generate(Patient patient, Nominee nominee)
+        public static byte[] Generate(Patient patient, Nominee nominee, byte[] profileImage = null)
         {
             
 
@@ -39,11 +39,19 @@ namespace HealthCardAPI.Services
                             // 2. Main Content
                             card.Item().Padding(20).Row(row =>
                             {
-                                // Left: Photo Placeholder
-                                row.ConstantItem(100).Column(photoCol =>
-                                {
-                                    photoCol.Item().Height(100).Width(100).Background(Colors.Grey.Lighten4).AlignMiddle().AlignCenter().Text("👤").FontSize(50).FontColor(Colors.Grey.Darken1);
-                                });
+                                    // Left: Photo Placeholder
+                                    // Use Image if available, else placeholder text
+                                    row.ConstantItem(100).Column(photoCol =>
+                                    {
+                                        if (profileImage != null && profileImage.Length > 0)
+                                        {
+                                            photoCol.Item().Height(100).Width(100).Image(profileImage);
+                                        }
+                                        else
+                                        {
+                                            photoCol.Item().Height(100).Width(100).Background(Colors.Grey.Lighten4).AlignMiddle().AlignCenter().Text("?").FontSize(50).FontColor(Colors.Grey.Darken1);
+                                        } 
+                                    });
 
                                 row.Spacing(20);
 

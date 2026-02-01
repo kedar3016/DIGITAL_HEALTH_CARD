@@ -9,8 +9,12 @@ import {
   FaDownload,
   FaSignOutAlt,
   FaUser,
+  FaAmbulance,
 } from "react-icons/fa";
+import { GiSiren } from "react-icons/gi";
 import ConfirmationModal from "../../components/ConfirmationModal";
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export default function DoctorDashboard() {
   const [doctor, setDoctor] = useState(null);
@@ -31,6 +35,13 @@ export default function DoctorDashboard() {
   /* New State for Access */
   const [accessStatus, setAccessStatus] = useState("NOT_REQUESTED"); // NOT_REQUESTED, PENDING, APPROVED, DENIED
   const [requestLoading, setRequestLoading] = useState(false);
+
+  /* New State for Emergency Access */
+  const [showEmergencyModal, setShowEmergencyModal] = useState(false);
+  const [emergencyHealthCardId, setEmergencyHealthCardId] = useState("");
+  const [emergencyData, setEmergencyData] = useState(null);
+  const [emergencyLoading, setEmergencyLoading] = useState(false);
+  const [emergencyError, setEmergencyError] = useState("");
 
   useEffect(() => {
     const fetchDoctorProfile = async () => {
@@ -151,6 +162,24 @@ export default function DoctorDashboard() {
     }
   };
 
+  const handleEmergencyAccess = async () => {
+    if (!emergencyHealthCardId.trim()) return;
+    setEmergencyLoading(true);
+    setEmergencyError("");
+    setEmergencyData(null);
+    try {
+      const res = await api.post("/api/nominee/emergency-access", {
+        healthCardNumber: emergencyHealthCardId
+      });
+      setEmergencyData(res.data);
+    } catch (err) {
+      console.error("Emergency Access Failed", err);
+      setEmergencyError("Invalid Health Card ID or No Data Found");
+    } finally {
+      setEmergencyLoading(false);
+    }
+  };
+
   return (
     <div style={styles.page}>
       {/* HEADER */}
@@ -170,42 +199,64 @@ export default function DoctorDashboard() {
           </div>
         </div>
 
-        {/* PROFILE DROPDOWN */}
-        <div style={{ position: "relative" }}>
+        {/* EMERGENCY ICON */}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <div
-            onClick={() => setShowDropdown(!showDropdown)}
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              background: "rgba(255,255,255,0.2)",
-              padding: "5px",
-              borderRadius: "50%",
-              transition: "background 0.2s"
+            onClick={() => {
+              setShowEmergencyModal(true);
+              setEmergencyHealthCardId("");
+              setEmergencyData(null);
+              setEmergencyError("");
             }}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              width: "40px", height: "40px", borderRadius: "50%",
+              background: "#ff4757", cursor: "pointer",
+              boxShadow: "0 2px 10px rgba(255, 71, 87, 0.4)",
+              transition: "transform 0.2s"
+            }}
+            title="Emergency Access"
           >
-            <FaUserMd size={24} color="white" />
+            <GiSiren color="white" size={24} />
           </div>
 
-          {showDropdown && (
-            <div style={styles.dropdownMenu}>
-              <div style={styles.dropdownHeader}>
-                <div style={styles.dropdownAvatar}>
-                  <FaUserMd color="#5654ff" size={16} />
-                </div>
-                <div>
-                  <span style={{ display: "block", fontSize: "14px", fontWeight: "700", color: "#333" }}>
-                    {doctor ? doctor.name : "Doctor"}
-                  </span>
-                  <span style={{ fontSize: "11px", color: "#888" }}>{doctor?.specialization || "General"}</span>
-                </div>
-              </div>
-              <div style={styles.dropdownDivider}></div>
-              <button onClick={() => setShowLogoutConfirm(true)} style={styles.dropdownItem}>
-                <FaSignOutAlt /> Logout
-              </button>
+          {/* PROFILE DROPDOWN */}
+          <div style={{ position: "relative" }}>
+            <div
+              onClick={() => setShowDropdown(!showDropdown)}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                background: "rgba(255,255,255,0.2)",
+                padding: "5px",
+                borderRadius: "50%",
+                transition: "background 0.2s"
+              }}
+            >
+              <FaUserMd size={24} color="white" />
             </div>
-          )}
+
+            {showDropdown && (
+              <div style={styles.dropdownMenu}>
+                <div style={styles.dropdownHeader}>
+                  <div style={styles.dropdownAvatar}>
+                    <FaUserMd color="#5654ff" size={16} />
+                  </div>
+                  <div>
+                    <span style={{ display: "block", fontSize: "14px", fontWeight: "700", color: "#333" }}>
+                      {doctor ? doctor.name : "Doctor"}
+                    </span>
+                    <span style={{ fontSize: "11px", color: "#888" }}>{doctor?.specialization || "General"}</span>
+                  </div>
+                </div>
+                <div style={styles.dropdownDivider}></div>
+                <button onClick={() => setShowLogoutConfirm(true)} style={styles.dropdownItem}>
+                  <FaSignOutAlt /> Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -348,7 +399,7 @@ export default function DoctorDashboard() {
                                   patientId: searchedPatient.id
                                 });
                               } catch (e) { console.error("Log view failed", e); }
-                              window.open(`http://localhost:5133${report.filePath}`, "_blank");
+                              window.open(`${baseUrl}${report.filePath}`, "_blank");
                             }}
                           >
                             <FaDownload /> View
@@ -414,6 +465,104 @@ export default function DoctorDashboard() {
         onCancel={() => setShowLogoutConfirm(false)}
         type="danger"
       />
+
+      {/* EMERGENCY ACCESS MODAL */}
+      {showEmergencyModal && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+          background: "rgba(0,0,0,0.6)", zIndex: 1000,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          backdropFilter: "blur(5px)"
+        }}>
+          <div style={{
+            background: "white", padding: "30px", borderRadius: "16px",
+            width: "450px", maxWidth: "90%", boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+            position: "relative", border: "1px solid #ff4757"
+          }}>
+            <button
+              onClick={() => setShowEmergencyModal(false)}
+              style={{
+                position: "absolute", top: "15px", right: "15px",
+                background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#888"
+              }}
+            >
+              ✕
+            </button>
+
+            <div style={{ textAlign: "center", marginBottom: "25px" }}>
+              <div style={{
+                width: "60px", height: "60px", background: "#fff1f2", borderRadius: "50%",
+                margin: "0 auto 15px", display: "flex", alignItems: "center", justifyContent: "center"
+              }}>
+                <GiSiren size={30} color="#ff4757" />
+              </div>
+              <h2 style={{ fontSize: "22px", fontWeight: "700", color: "#333", margin: 0 }}>Emergency Access</h2>
+              <p style={{ fontSize: "14px", color: "#666", marginTop: "5px" }}>
+                Instantly view nominee details for emergency contact.
+              </p>
+            </div>
+
+            {!emergencyData ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                <input
+                  type="text"
+                  placeholder="Enter Health Card Number"
+                  value={emergencyHealthCardId}
+                  onChange={(e) => setEmergencyHealthCardId(e.target.value)}
+                  style={{
+                    padding: "12px", borderRadius: "8px", border: "1px solid #e2e8f0",
+                    fontSize: "16px", width: "100%", outline: "none"
+                  }}
+                />
+                {emergencyError && <p style={{ color: "#ef4444", fontSize: "14px", margin: 0 }}>{emergencyError}</p>}
+
+                <button
+                  onClick={handleEmergencyAccess}
+                  disabled={emergencyLoading || !emergencyHealthCardId.trim()}
+                  style={{
+                    background: "#ff4757", color: "white", border: "none", padding: "12px",
+                    borderRadius: "8px", fontSize: "16px", fontWeight: "600", cursor: "pointer",
+                    opacity: (emergencyLoading || !emergencyHealthCardId.trim()) ? 0.7 : 1
+                  }}
+                >
+                  {emergencyLoading ? "Fetching..." : "Fetch Details"}
+                </button>
+              </div>
+            ) : (
+              <div style={{ textAlign: "left" }}>
+                <div style={{ background: "#f8fafc", padding: "15px", borderRadius: "8px", border: "1px solid #e2e8f0", marginBottom: "15px" }}>
+                  <h4 style={{ margin: "0 0 10px", color: "#333", borderBottom: "1px dashed #cbd5e1", paddingBottom: "5px" }}>Patient Info</h4>
+                  <p style={{ margin: "5px 0", fontSize: "14px" }}><strong>Name:</strong> {emergencyData.name}</p>
+                  <p style={{ margin: "5px 0", fontSize: "14px" }}><strong>Blood Group:</strong> <span style={{ color: "#ef4444", fontWeight: "bold" }}>{emergencyData.bloodGroup || "N/A"}</span></p>
+                </div>
+
+                <div style={{ background: "#fff1f2", padding: "15px", borderRadius: "8px", border: "1px solid #fecdd3" }}>
+                  <h4 style={{ margin: "0 0 10px", color: "#9f1239", borderBottom: "1px dashed #fecdd3", paddingBottom: "5px" }}>Nominee Details</h4>
+                  <p style={{ margin: "5px 0", fontSize: "15px" }}><strong>Name:</strong> {emergencyData.nomineeName}</p>
+                  <p style={{ margin: "5px 0", fontSize: "15px" }}><strong>Relation:</strong> {emergencyData.nomineeRelation}</p>
+                  <p style={{ margin: "5px 0", fontSize: "15px" }}>
+                    <strong>Phone:</strong>
+                    <a href={`tel:${emergencyData.nomineePhone}`} style={{ color: "#ef4444", fontWeight: "bold", marginLeft: "5px", textDecoration: "none" }}>
+                      {emergencyData.nomineePhone}
+                    </a>
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setEmergencyData(null)}
+                  style={{
+                    background: "transparent", border: "1px solid #cbd5e1", color: "#64748b",
+                    padding: "10px", borderRadius: "8px", width: "100%", marginTop: "20px",
+                    cursor: "pointer", fontWeight: "600"
+                  }}
+                >
+                  Search Another
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div >
   );
 }

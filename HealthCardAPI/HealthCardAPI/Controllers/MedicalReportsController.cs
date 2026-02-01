@@ -157,6 +157,44 @@ public class MedicalReportsController : ControllerBase
         }
     }
 
+
+    // ✅ DELETE REPORT
+    [HttpDelete("delete/{id}")]
+    [Authorize(Roles = "Patient")]
+    public async Task<IActionResult> DeleteReport(int id)
+    {
+        var patientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        var report = await _context.MedicalReports.FindAsync(id);
+
+        if (report == null)
+            return NotFound("Report not found");
+
+        if (report.PatientId != patientId)
+            return Forbid("You can only delete your own reports");
+
+        // 1. Delete File
+        try
+        {
+            var fullPath = Path.Combine(_env.WebRootPath, report.FilePath.TrimStart('/').Replace("/", "\\"));
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting file: {ex.Message}");
+            // Continue to delete record even if file delete fails (or handle as needed)
+        }
+
+        // 2. Delete DB Record
+        _context.MedicalReports.Remove(report);
+        await _context.SaveChangesAsync();
+
+        return Ok("Report deleted successfully");
+    }
+
     private async Task<bool> CheckAccess(int patientId, int requesterId, string role)
     {
         var request = await _context.AccessRequests

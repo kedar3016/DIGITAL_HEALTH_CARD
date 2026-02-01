@@ -23,6 +23,10 @@ export default function DoctorRegister() {
       // Allow only numbers and max 10 digits
       const numericValue = value.replace(/\D/g, "").slice(0, 10);
       setFormData({ ...formData, [name]: numericValue });
+    } else if (name === "name") {
+      // Allow only letters and spaces
+      const letterValue = value.replace(/[^a-zA-Z\s]/g, "");
+      setFormData({ ...formData, [name]: letterValue });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -34,8 +38,20 @@ export default function DoctorRegister() {
       setError("Full Name is required");
       return;
     }
+    // Standard Name Validation (Letters and spaces only)
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!nameRegex.test(formData.name)) {
+      setError("Name contains invalid characters. Only letters and spaces are allowed.");
+      return;
+    }
     if (!formData.email.trim()) {
       setError("Email Address is required");
+      return;
+    }
+    // Standard Email Validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address.");
       return;
     }
     if (!formData.password) {

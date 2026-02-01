@@ -23,7 +23,11 @@ export default function LabTechRegister() {
     let { name, value, type, checked } = e.target;
 
     if (name === "phoneNumber") {
+      // Allow only numbers and max 10 digits
       value = value.replace(/\D/g, '').slice(0, 10);
+    } else if (name === "technicianName") {
+      // Allow only letters and spaces
+      value = value.replace(/[^a-zA-Z\s]/g, "");
     }
 
     setFormData({
@@ -34,9 +38,10 @@ export default function LabTechRegister() {
 
   const register = async () => {
     // Validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Standard Email Validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email)) {
-      setError("Please enter a valid email address");
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -49,6 +54,12 @@ export default function LabTechRegister() {
       setError("Technician Name is required");
       return;
     }
+    // Standard Name Validation (Letters and spaces only)
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!nameRegex.test(formData.technicianName)) {
+      setError("Name contains invalid characters. Only letters and spaces are allowed.");
+      return;
+    }
     if (!formData.email.trim()) {
       setError("Email Address is required");
       return;
@@ -59,6 +70,10 @@ export default function LabTechRegister() {
     }
     if (!formData.labName.trim()) {
       setError("Laboratory Name is required");
+      return;
+    }
+    if (!formData.labAddress.trim()) {
+      setError("Lab Address is required");
       return;
     }
 

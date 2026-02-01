@@ -13,15 +13,17 @@ namespace HealthCardAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly ISmsService _smsService;
+       // private readonly ISmsService _smsService;
+        private readonly IOtpService _otpService;
         private readonly IJwtService _jwtService;
 
         private readonly IEmailService _emailService;
 
-        public AuthController(AppDbContext context, ISmsService smsService, IJwtService jwtService, IEmailService emailService)
+        public AuthController(AppDbContext context, IOtpService otpService, IJwtService jwtService, IEmailService emailService)
         {
             _context = context;
-            _smsService = smsService;
+            _otpService = otpService;
+           //_smsService = smsService;
             _jwtService = jwtService;
             _emailService = emailService;
         }
@@ -46,7 +48,7 @@ namespace HealthCardAPI.Controllers
 
             await _context.SaveChangesAsync();
 
-            //await _smsService.SendOtpAsync(dto.PhoneNumber, otp); For Testing Purspose Pause
+            var message = await _otpService.SendOtpAsync(dto.AadhaarNumber); // For Testing Purspose Pause
 
             return Ok($"OTP sent to registered mobile number Your Otp Is {otp}");
         }

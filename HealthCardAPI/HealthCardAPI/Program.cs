@@ -50,24 +50,37 @@ internal class Program
                     new string[] {}
                 }
             });
+
         });
 
-        // ✅ ADD CORS
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowFrontend",
                 policy =>
                 {
                     policy
-                        .WithOrigins(
-                            "http://localhost:5173",
-                            "https://localhost:5173"
-                        )
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
+                        .AllowAnyMethod();
                 });
         });
+
+        // ✅ ADD CORS
+        //builder.Services.AddCors(options =>
+        //{
+        //    options.AddPolicy("AllowFrontend",
+        //        policy =>
+        //        {
+        //            policy
+        //                .WithOrigins(
+        //                    "http://localhost:5173",
+        //                    "https://localhost:5173"
+        //                )
+        //                .AllowAnyHeader()
+        //                .AllowAnyMethod()
+        //                .AllowCredentials();
+        //        });
+        //});
 
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -111,11 +124,11 @@ internal class Program
         var app = builder.Build();
 
         // Migrate database
-        using (var scope = app.Services.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            db.Database.Migrate();
-        }
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        //    db.Database.Migrate();
+        //}
 
         app.UseSwagger();
         app.UseSwaggerUI();
