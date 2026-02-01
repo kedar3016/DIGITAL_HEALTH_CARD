@@ -115,4 +115,32 @@ Update `appsettings.json` with your credentials:
 3. Commit your changes.
 4. Push to the branch.
 5. Open a Pull Request.
-
+# AarogyaCard Frontend
+A production-ready React.js frontend for the AarogyaCard Digital Health Card system, featuring an exceptional, modern landing page inspired by eka.care.
+## ✨ Exceptional Landing Page Features
+### 🎨 **Premium Design System**
+- **Healthcare Color Palette**: Professional blue/purple gradients (#667eea, #764ba2)
+- **Advanced Animations**: Smooth CSS animations, floating elements, and micro-interactions
+- **Glassmorphism Effects**: Modern backdrop blur and transparency effects
+- **Responsive Typography**: Clamp() functions for perfect scaling across devices
+### 🚀 **Hero Section Excellence**
+- **Full-Screen Impact**: Immersive hero with animated background elements
+- **Trust Indicators**: Social proof badges and user statistics
+- **Dual CTA Strategy**: Separate buttons for patients and healthcare professionals
+- **Floating Medical Icons**: Animated healthcare-themed decorative elements
+### 💎 **Enhanced Features Showcase**
+- **6 Comprehensive Features**: Digital records, security, PDF reports, emergency access, doctor verification, lab integration
+- **User Roles**: Detailed breakdown for Patients, Doctors, Lab Techs, and Admins.
+## Core Features
+- **Authentication**: JWT-based authentication with role-based access control
+- **Dashboards**: Separate dashboards for Patients, Doctors, Lab Technicians, and Hospital Admins
+- **Medical Reports**: View and upload PDF medical reports
+- **Smart Health Card**: Download comprehensive health card PDF
+- **Responsive Design**: Mobile-first design with healthcare color scheme
+## Tech Stack
+- **React 19** with Vite
+- **Axios** for API calls
+- **Tailwind CSS** (via configuration) & Custom CSS
+- **React Router DOM**
+## Project Structure
+src/ ├── api/ # Axios config & interceptors ├── auth/ # Protected Routes & Role Guards ├── components/ # Reusable UI (Navbar, Footer, Hero, etc.) ├── pages/ # Page assignments per role │ ├── patient/ # Patient Dashboard & Profile │ ├── doctor/ # Doctor Dashboard │ ├── labtech/ # Lab Dashboard & Uploads │ └── admin/ # Hospital Admin Controls └── main.jsx # Entry Poin
