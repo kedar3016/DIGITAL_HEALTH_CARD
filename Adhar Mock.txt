@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 INSERT INTO aadhaar_details
 (aadhaar_number, name, date_of_birth, gender, address, mobile)
 VALUES
@@ -29,4 +30,37 @@ VALUES
  'Madhapur, Hyderabad, Telangana - 500081', 9000000009),
 
 (133345678910, 'Kavita Joshi', '1998-10-28', 'Female',
+=======
+INSERT INTO aadhaar_details
+(aadhaar_number, name, date_of_birth, gender, address, mobile)
+VALUES
+(123456789012, ''Kedar Mane', '1995-02-14', 'Male',
+ 'Sector 10, Rohini, Delhi - 110085', 7588111644),
+
+(223345678902, 'Poonam Agrawal', '1998-07-21', 'Female',
+ 'Alambagh, Lucknow, Uttar Pradesh - 226005', 9665470203),
+
+(323345678903, 'Chandrakant Palandurkar', '1994-11-03', 'Male',
+ 'Civil Lines, Jaipur, Rajasthan - 302006', 7666942033),
+
+(423345678904, ''Pooja Wajh', '1999-05-18', 'Female',
+ 'Kothrud, Pune, Maharashtra - 411038', 8378943523),
+
+(523345678905, 'Suresh Patel', '1992-09-09', 'Male',
+ 'Maninagar, Ahmedabad, Gujarat - 380008', 9000000005),
+
+(623345678906, ''Vaibhavi Waghmode', '1997-01-25', 'Female',
+ 'Vijay Nagar, Indore, Madhya Pradesh - 452010', 9579381664),
+
+(723345678907, 'Rahul Nair', '1996-03-30', 'Male',
+ 'Kakkanad, Kochi, Kerala - 682030', 9000000007),
+
+(823345678908, 'Sneha Iyer', '2000-12-12', 'Female',
+ 'Velachery, Chennai, Tamil Nadu - 600042', 9000000008),
+
+(923345678909, 'Arjun Reddy', '1993-06-06', 'Male',
+ 'Madhapur, Hyderabad, Telangana - 500081', 9000000009),
+
+(133345678910, 'Kavita Joshi', '1998-10-28', 'Female',
+>>>>>>> 11ffbfa9800dce0664fca25ec097ca8342a8b4e4
  'Malviya Nagar, Bhopal, Madhya Pradesh - 462003', 9000000010);
